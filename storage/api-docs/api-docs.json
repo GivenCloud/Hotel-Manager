@@ -1,0 +1,3006 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Hotel management API",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/category": {
+            "get": {
+                "tags": [
+                    "Category"
+                ],
+                "summary": "Get all categories",
+                "description": "List of categories",
+                "operationId": "d2f23b45653dc0dff84f355889899c25",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Category"
+                ],
+                "summary": "Create a new category",
+                "description": "Create a new category with the provided details",
+                "operationId": "9b300a1cd5dbb6150e54b7cc55703872",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Category Name"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Category created successfully"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                }
+            }
+        },
+        "/api/category/{id}": {
+            "get": {
+                "tags": [
+                    "Category"
+                ],
+                "summary": "Get a specific category",
+                "description": "Retrieve a specific category by ID",
+                "operationId": "c537f531f1c82505c335ed294c0b7ba7",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the category",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "404": {
+                        "description": "Category not found"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Category"
+                ],
+                "summary": "Update an existing category",
+                "description": "Update an existing category by ID",
+                "operationId": "801f46c012a257176f992d879496cabb",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the category",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Updated Category Name"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Category updated successfully"
+                    },
+                    "404": {
+                        "description": "Category not found"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Category"
+                ],
+                "summary": "Delete a specific category",
+                "description": "Delete a specific category by ID",
+                "operationId": "d320b755273261abb6a02807177e982d",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the category",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Category deleted successfully"
+                    },
+                    "404": {
+                        "description": "Category not found"
+                    }
+                }
+            }
+        },
+        "/api/category/search/{name}": {
+            "get": {
+                "tags": [
+                    "Category"
+                ],
+                "summary": "Search categories by name",
+                "description": "Search categories by name",
+                "operationId": "8238e0f3ef77161d46a46e4ff70e6dbb",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "path",
+                        "description": "Name of the category",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                }
+            }
+        },
+        "/api/category/{id}/services": {
+            "get": {
+                "tags": [
+                    "Category"
+                ],
+                "summary": "Get services of a specific category",
+                "description": "Get services of a specific category by ID",
+                "operationId": "c37856dcc84dbb625cb6050cf6becce3",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the category",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "404": {
+                        "description": "Category not found"
+                    }
+                }
+            }
+        },
+        "/api/guest": {
+            "get": {
+                "tags": [
+                    "Guest"
+                ],
+                "summary": "Get all guests",
+                "description": "List of guests",
+                "operationId": "bdd3e88cba3e6bcf18a3beab32adff44",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Guest"
+                ],
+                "summary": "Create a new guest",
+                "description": "Create a new guest with the provided details",
+                "operationId": "174c3e57f2db9deb6567d79efd972a70",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "lastName",
+                                    "dniPassport",
+                                    "phone",
+                                    "email"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Guest Name"
+                                    },
+                                    "lastName": {
+                                        "type": "string",
+                                        "example": "Guest Last Name"
+                                    },
+                                    "dniPassport": {
+                                        "type": "string",
+                                        "example": "25588978L"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "guest@example.com"
+                                    },
+                                    "phone": {
+                                        "type": "string",
+                                        "example": "123456789"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Guest created successfully"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                }
+            }
+        },
+        "/api/guest/{id}": {
+            "get": {
+                "tags": [
+                    "Guest"
+                ],
+                "summary": "Get a specific guest",
+                "description": "Retrieve a specific guest by ID",
+                "operationId": "d85743487481a82c98b04b8b0f09df98",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the guest",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "404": {
+                        "description": "Guest not found"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Guest"
+                ],
+                "summary": "Update an existing guest",
+                "description": "Update an existing guest by ID",
+                "operationId": "d10c7f583afe5a0e1cdb1b511a59faf1",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the guest",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "lastName",
+                                    "dniPassport",
+                                    "email",
+                                    "phone"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Updated Guest Name"
+                                    },
+                                    "lastName": {
+                                        "type": "string",
+                                        "example": "Updated Guest Last Name"
+                                    },
+                                    "dniPassport": {
+                                        "type": "string",
+                                        "example": "89653691D"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "updated-guest-email@gmail.com"
+                                    },
+                                    "phone": {
+                                        "type": "string",
+                                        "example": "987654321"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Guest updated successfully"
+                    },
+                    "404": {
+                        "description": "Guest not found"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Guest"
+                ],
+                "summary": "Delete a specific guest",
+                "description": "Delete a specific guest by ID",
+                "operationId": "883beca2e205c4f94d5d8768c6af3edb",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the guest",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Guest deleted successfully"
+                    },
+                    "404": {
+                        "description": "Guest not found"
+                    }
+                }
+            }
+        },
+        "/api/guest/search/{name}": {
+            "get": {
+                "tags": [
+                    "Guest"
+                ],
+                "summary": "Search guests by name",
+                "description": "Search guests by name",
+                "operationId": "b88cc0703773187958b5181e1f26b133",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "path",
+                        "description": "Name of the guest",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                }
+            }
+        },
+        "/api/guest/{id}/rooms": {
+            "get": {
+                "tags": [
+                    "Guest"
+                ],
+                "summary": "Get rooms of a specific guest",
+                "description": "Get rooms of a specific guest by ID",
+                "operationId": "5db7f10ac82052b461280c6d8fa653ff",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the guest",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "404": {
+                        "description": "Guest not found"
+                    }
+                }
+            }
+        },
+        "/api/guest/{guest}/rooms": {
+            "post": {
+                "tags": [
+                    "Guest"
+                ],
+                "summary": "Add rooms to a specific guest",
+                "description": "Add rooms to a specific guest by ID",
+                "operationId": "96a548c79fd3e92d066381b9c8d98825",
+                "parameters": [
+                    {
+                        "name": "guest",
+                        "in": "path",
+                        "description": "ID of the guest",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "guest_id",
+                                    "room_id",
+                                    "checkInDate",
+                                    "checkOutDate"
+                                ],
+                                "properties": {
+                                    "guest_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "room_id": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer",
+                                            "example": 1
+                                        }
+                                    },
+                                    "checkInDate": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2021-10-01"
+                                    },
+                                    "checkOutDate": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2021-10-10"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Rooms added successfully"
+                    },
+                    "404": {
+                        "description": "Guest not found"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Guest"
+                ],
+                "summary": "Remove rooms from a specific guest",
+                "description": "Remove rooms from a specific guest by ID",
+                "operationId": "4c3027fea29181c8a7e62ba204a4e6d3",
+                "parameters": [
+                    {
+                        "name": "guest",
+                        "in": "path",
+                        "description": "ID of the guest",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "guest_id",
+                                    "room_id",
+                                    "checkInDate",
+                                    "checkOutDate"
+                                ],
+                                "properties": {
+                                    "guest_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "room_id": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer",
+                                            "example": 1
+                                        }
+                                    },
+                                    "checkInDate": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2021-10-01"
+                                    },
+                                    "checkOutDate": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2021-10-10"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "rooms removed successfully"
+                    },
+                    "404": {
+                        "description": "Guest not found"
+                    }
+                }
+            }
+        },
+        "/api/guest/{id}/services": {
+            "get": {
+                "tags": [
+                    "Guest"
+                ],
+                "summary": "Get services of a specific guest",
+                "description": "Get services of a specific guest by ID",
+                "operationId": "a6dde57f2f45db9a428f17822fd23d9f",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the guest",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "404": {
+                        "description": "Guest not found"
+                    }
+                }
+            }
+        },
+        "/api/guest/{guest}/services": {
+            "post": {
+                "tags": [
+                    "Guest"
+                ],
+                "summary": "Add services to a specific guest",
+                "description": "Add services to a specific guest by ID",
+                "operationId": "f320bd3e53d4ed34acc45f92ed884867",
+                "parameters": [
+                    {
+                        "name": "guest",
+                        "in": "path",
+                        "description": "ID of the guest",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "guest_id",
+                                    "service_id"
+                                ],
+                                "properties": {
+                                    "guest_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "service_id": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer",
+                                            "example": 1
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Services added successfully"
+                    },
+                    "404": {
+                        "description": "Guest not found"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Guest"
+                ],
+                "summary": "Remove services from a specific guest",
+                "description": "Remove services from a specific guest by ID",
+                "operationId": "3dd7e89e9717556c196b459b9d3e5db3",
+                "parameters": [
+                    {
+                        "name": "guest",
+                        "in": "path",
+                        "description": "ID of the guest",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "guest_id",
+                                    "service_id"
+                                ],
+                                "properties": {
+                                    "guest_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "service_id": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer",
+                                            "example": 1
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Services removed successfully"
+                    },
+                    "404": {
+                        "description": "Guest not found"
+                    }
+                }
+            }
+        },
+        "/api/hotel": {
+            "get": {
+                "tags": [
+                    "Hotel"
+                ],
+                "summary": "Get all hotels",
+                "description": "List of hotels",
+                "operationId": "42e38e1ec9a77688ed78f16868c19a31",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Hotel"
+                ],
+                "summary": "Create a new hotel",
+                "description": "Create a new hotel with the provided details",
+                "operationId": "e4cd0a9fd83fe69e1de0b7278c89a329",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "address",
+                                    "phone",
+                                    "email",
+                                    "website"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Name"
+                                    },
+                                    "address": {
+                                        "type": "string",
+                                        "example": "Address"
+                                    },
+                                    "phone": {
+                                        "type": "string",
+                                        "example": "997654321"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "hotel@example.com"
+                                    },
+                                    "website": {
+                                        "type": "string",
+                                        "format": "url",
+                                        "example": "hotel.com"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Hotel created successfully"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                }
+            }
+        },
+        "/api/hotel/{id}": {
+            "get": {
+                "tags": [
+                    "Hotel"
+                ],
+                "summary": "Get a specific hotel",
+                "description": "Retrieve a specific hotel by ID",
+                "operationId": "834e722d4a653eb33c419e11980be20e",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the hotel",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "404": {
+                        "description": "Hotel not found"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Hotel"
+                ],
+                "summary": "Update an existing hotel",
+                "description": "Update an existing hotel by ID",
+                "operationId": "aaa283c9b6f6d4bf9baed2a64f9705f5",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the hotel",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "address",
+                                    "phone",
+                                    "email",
+                                    "website"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Updated Name"
+                                    },
+                                    "address": {
+                                        "type": "string",
+                                        "example": "Updated Address"
+                                    },
+                                    "phone": {
+                                        "type": "string",
+                                        "example": "987654111"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "updated.email@gmail.com"
+                                    },
+                                    "website": {
+                                        "type": "string",
+                                        "format": "url",
+                                        "example": "updated-hotel.com"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Hotel updated successfully"
+                    },
+                    "404": {
+                        "description": "Hotel not found"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Hotel"
+                ],
+                "summary": "Delete a specific hotel",
+                "description": "Delete a specific hotel by ID",
+                "operationId": "c028370bd4871a5de33d5e2e2e8af789",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the hotel",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Hotel deleted successfully"
+                    },
+                    "404": {
+                        "description": "Hotel not found"
+                    }
+                }
+            }
+        },
+        "/api/hotel/search/{name}": {
+            "get": {
+                "tags": [
+                    "Hotel"
+                ],
+                "summary": "Search hotels by name",
+                "description": "Search hotels by name",
+                "operationId": "0dec50b17681afc04da8c97c6e0cb342",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "path",
+                        "description": "Name of the hotel",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                }
+            }
+        },
+        "/api/hotel/{id}/rooms": {
+            "get": {
+                "tags": [
+                    "Hotel"
+                ],
+                "summary": "Get rooms of a specific hotel",
+                "description": "Get rooms of a specific hotel by ID",
+                "operationId": "9ff33633c5a4bef40ab0fd8c576a8f98",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the hotel",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "404": {
+                        "description": "Hotel not found"
+                    }
+                }
+            }
+        },
+        "/api/hotel/{id}/services": {
+            "get": {
+                "tags": [
+                    "Hotel"
+                ],
+                "summary": "Get services of a specific hotel",
+                "description": "Get services of a specific hotel by ID",
+                "operationId": "51c4a76390aece0a1011ee115d417cf8",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the hotel",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "404": {
+                        "description": "Hotel not found"
+                    }
+                }
+            }
+        },
+        "/api/hotel/{hotel}/services": {
+            "post": {
+                "tags": [
+                    "Hotel"
+                ],
+                "summary": "Add services to a specific hotel",
+                "description": "Add services to a specific hotel by ID",
+                "operationId": "6b4feabc6cee19ae0a948ba3147eae6a",
+                "parameters": [
+                    {
+                        "name": "hotel",
+                        "in": "path",
+                        "description": "ID of the hotel",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "hotel_id",
+                                    "service_id"
+                                ],
+                                "properties": {
+                                    "hotel_id": {
+                                        "type": "integer",
+                                        "example": "1"
+                                    },
+                                    "service_id": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer",
+                                            "example": 1
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Services added successfully"
+                    },
+                    "404": {
+                        "description": "Hotel not found"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Hotel"
+                ],
+                "summary": "Remove services from a specific hotel",
+                "description": "Remove services from a specific hotel by ID",
+                "operationId": "58580db1d1859852cacfc7984dac400d",
+                "parameters": [
+                    {
+                        "name": "hotel",
+                        "in": "path",
+                        "description": "ID of the hotel",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "hotel_id",
+                                    "service_id"
+                                ],
+                                "properties": {
+                                    "hotel_id": {
+                                        "type": "integer",
+                                        "example": "1"
+                                    },
+                                    "service_id": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer",
+                                            "example": 1
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Services removed successfully"
+                    },
+                    "404": {
+                        "description": "Hotel not found"
+                    }
+                }
+            }
+        },
+        "/api/guest-service": {
+            "get": {
+                "tags": [
+                    "GuestService"
+                ],
+                "summary": "Get all guest-service",
+                "description": "List of guest-service",
+                "operationId": "bb77d78440dd6ed88d225e130b738151",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                }
+            }
+        },
+        "/api/guest-services/add-guests": {
+            "post": {
+                "tags": [
+                    "GuestService"
+                ],
+                "summary": "Add guests to a service",
+                "description": "Add guests to a service",
+                "operationId": "594c943c6f20d7a4d39dbe1828f8ffac",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "service_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "guest_ids": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer",
+                                            "example": 1
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                }
+            }
+        },
+        "/api/guest-services/add-services": {
+            "post": {
+                "tags": [
+                    "GuestService"
+                ],
+                "summary": "Add services to a guest",
+                "description": "Add services to a guest",
+                "operationId": "41c93f1b0a6ae82947aa44a82e44f193",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "guest_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "service_ids": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer",
+                                            "example": 1
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                }
+            }
+        },
+        "/api/guest-service/{id}": {
+            "get": {
+                "tags": [
+                    "GuestService"
+                ],
+                "summary": "Get a specific guest-service",
+                "description": "Retrieve a specific guestservice by ID",
+                "operationId": "63974fac2a0a62536aef2323d2b19c5d",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the guest-service",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "404": {
+                        "description": "Guest-Service not found"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "GuestService"
+                ],
+                "summary": "Delete a specific guest-service",
+                "description": "Delete a specific guest-service by ID",
+                "operationId": "f7456988d40dac5e5cfffcdfb0b226f0",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the guest-service",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Guest-Service deleted successfully"
+                    },
+                    "404": {
+                        "description": "Guest-Service not found"
+                    }
+                }
+            }
+        },
+        "/api/guest-services/update-guests": {
+            "put": {
+                "tags": [
+                    "GuestService"
+                ],
+                "summary": "Update guests for a service",
+                "description": "Update guests for a service",
+                "operationId": "dc5e71aea794bdbc5b48bcb9fa1c64e0",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "service_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "guest_ids": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer",
+                                            "example": 1
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                }
+            }
+        },
+        "/api/guest-services/update-services": {
+            "put": {
+                "tags": [
+                    "GuestService"
+                ],
+                "summary": "Update services for a guest",
+                "description": "Update services for a guest",
+                "operationId": "9eafd4af742b1364d13d402166dd97cd",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "guest_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "service_ids": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer",
+                                            "example": 1
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                }
+            }
+        },
+        "/api/hotel-service": {
+            "get": {
+                "tags": [
+                    "HotelService"
+                ],
+                "summary": "Get all hotel-service",
+                "description": "List of hotel-service",
+                "operationId": "e8619545825bac7064cfea9ea41536f1",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                }
+            }
+        },
+        "/api/hotel-services/add-hotels": {
+            "post": {
+                "tags": [
+                    "HotelService"
+                ],
+                "summary": "Add hotels to a service",
+                "description": "Add hotels to a service",
+                "operationId": "e257e2813ecb06d5295fc82c8f84cac1",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "service_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "hotel_ids": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer",
+                                            "example": 1
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                }
+            }
+        },
+        "/api/hotel-services/add-services": {
+            "post": {
+                "tags": [
+                    "HotelService"
+                ],
+                "summary": "Add services to a hotel",
+                "description": "Add services to a hotel",
+                "operationId": "edcaea5f1c78b3552c45ad0e43df88ea",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "hotel_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "service_ids": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer",
+                                            "example": 1
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                }
+            }
+        },
+        "/api/hotel-service/{id}": {
+            "get": {
+                "tags": [
+                    "HotelService"
+                ],
+                "summary": "Get a specific hotel-service",
+                "description": "Retrieve a specific hotelservice by ID",
+                "operationId": "8cbeb5a5894d8e8a06d26852bfe43061",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the hotel-service",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "404": {
+                        "description": "Hotel-Service not found"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "HotelService"
+                ],
+                "summary": "Delete a specific hotel-service",
+                "description": "Delete a specific hotel-service by ID",
+                "operationId": "a7872dba2adedb44bc905e743ff7b193",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the hotel-service",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Hotel-Service deleted successfully"
+                    },
+                    "404": {
+                        "description": "Hotel-Service not found"
+                    }
+                }
+            }
+        },
+        "/api/hotel-services/update-hotels": {
+            "put": {
+                "tags": [
+                    "HotelService"
+                ],
+                "summary": "Update hotels for a service",
+                "description": "Update hotels for a service",
+                "operationId": "6f39edf9642bd3985d74312b8fa0d615",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "service_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "hotel_ids": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer",
+                                            "example": 1
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                }
+            }
+        },
+        "/api/hotel-services/update-services": {
+            "put": {
+                "tags": [
+                    "HotelService"
+                ],
+                "summary": "Update services for a hotel",
+                "description": "Update services for a hotel",
+                "operationId": "45456b89da5befce3abd84c48ef747a5",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "hotel_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "service_ids": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer",
+                                            "example": 1
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                }
+            }
+        },
+        "/api/room-guest": {
+            "get": {
+                "tags": [
+                    "RoomGuest"
+                ],
+                "summary": "Get all room-guest",
+                "description": "List of room-guest",
+                "operationId": "f8ca4174ee3c1e1bfe73dcc24035a2f0",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                }
+            }
+        },
+        "/api/room-guests/add-rooms": {
+            "post": {
+                "tags": [
+                    "RoomGuest"
+                ],
+                "summary": "Add rooms to a guest",
+                "description": "Add rooms to a guest",
+                "operationId": "04814971e3bdb3c0b00898ad3dfd5b5b",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "guest_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "room_ids": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer",
+                                            "example": 1
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                }
+            }
+        },
+        "/api/room-guests/add-guests": {
+            "post": {
+                "tags": [
+                    "RoomGuest"
+                ],
+                "summary": "Add guests to a room",
+                "description": "Add guests to a room",
+                "operationId": "de5df8dd22c7b169ecf0ee9ed7b8a941",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "room_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "guest_ids": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer",
+                                            "example": 1
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                }
+            }
+        },
+        "/api/room-guest/{id}": {
+            "get": {
+                "tags": [
+                    "RoomGuest"
+                ],
+                "summary": "Get a specific room-guest",
+                "description": "Retrieve a specific roomguest by ID",
+                "operationId": "959088b547dfad31b5bc2cd83d6e5112",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the room-guest",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "404": {
+                        "description": "Room-Guest not found"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "RoomGuest"
+                ],
+                "summary": "Delete a specific room-guest",
+                "description": "Delete a specific room-guest by ID",
+                "operationId": "8199cecb49dfa24ce683efd02ce64095",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the room-guest",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Room-Guest deleted successfully"
+                    },
+                    "404": {
+                        "description": "Room-Guest not found"
+                    }
+                }
+            }
+        },
+        "/api/room-guests/update-rooms": {
+            "put": {
+                "tags": [
+                    "RoomGuest"
+                ],
+                "summary": "Update rooms for a guest",
+                "description": "Update rooms for a guest",
+                "operationId": "185e245cb03f21ac01da16a1f3381d78",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "guest_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "room_ids": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer",
+                                            "example": 1
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                }
+            }
+        },
+        "/api/room-guests/update-guests": {
+            "put": {
+                "tags": [
+                    "RoomGuest"
+                ],
+                "summary": "Update guests for a room",
+                "description": "Update guests for a room",
+                "operationId": "14af350a8759ac6cd0e9753049545c4d",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "room_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "guest_ids": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer",
+                                            "example": 1
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                }
+            }
+        },
+        "/api/room": {
+            "get": {
+                "tags": [
+                    "Room"
+                ],
+                "summary": "Get all rooms",
+                "description": "List of rooms",
+                "operationId": "1758cfa0a4f31164f32a8c2192f97d86",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Room"
+                ],
+                "summary": "Create a new room",
+                "description": "Create a new room with the provided details",
+                "operationId": "9be38be1eed9b9d7e62fd45fca294b7c",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "number",
+                                    "type_id",
+                                    "hotel_id"
+                                ],
+                                "properties": {
+                                    "number": {
+                                        "type": "integer",
+                                        "example": "101"
+                                    },
+                                    "type_id": {
+                                        "type": "integer",
+                                        "example": "1"
+                                    },
+                                    "hotel_id": {
+                                        "type": "integer",
+                                        "example": "1"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Room created successfully"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                }
+            }
+        },
+        "/api/room/{id}": {
+            "get": {
+                "tags": [
+                    "Room"
+                ],
+                "summary": "Get a specific room",
+                "description": "Retrieve a specific room by ID",
+                "operationId": "c45e99f9ccf62d45114462c46ea5036a",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the room",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "404": {
+                        "description": "Room not found"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Room"
+                ],
+                "summary": "Update an existing room",
+                "description": "Update an existing room by ID",
+                "operationId": "096109bd729e9ee91d620d1b883d87df",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the room",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "number",
+                                    "type_id",
+                                    "hotel_id"
+                                ],
+                                "properties": {
+                                    "number": {
+                                        "type": "integer",
+                                        "example": "101"
+                                    },
+                                    "type_id": {
+                                        "type": "integer",
+                                        "example": "3"
+                                    },
+                                    "hotel_id": {
+                                        "type": "integer",
+                                        "example": "2"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Room updated successfully"
+                    },
+                    "404": {
+                        "description": "Room not found"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Room"
+                ],
+                "summary": "Delete a specific room",
+                "description": "Delete a specific room by ID",
+                "operationId": "ba010fe020114b40d872de5e7913a8d5",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the room",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Room deleted successfully"
+                    },
+                    "404": {
+                        "description": "Room not found"
+                    }
+                }
+            }
+        },
+        "/api/room/search/{number}": {
+            "get": {
+                "tags": [
+                    "Room"
+                ],
+                "summary": "Search rooms by number",
+                "description": "Search rooms by number",
+                "operationId": "58770128b99b5deb310cc0834add642b",
+                "parameters": [
+                    {
+                        "name": "number",
+                        "in": "path",
+                        "description": "Number of the room",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                }
+            }
+        },
+        "/api/room/{id}/type": {
+            "get": {
+                "tags": [
+                    "Room"
+                ],
+                "summary": "Get types of a specific room",
+                "description": "Get types of a specific room by ID",
+                "operationId": "d32c0a33bb5094e496009174fe8ee3dc",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the room",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "404": {
+                        "description": "Room not found"
+                    }
+                }
+            }
+        },
+        "/api/room/{id}/hotels": {
+            "get": {
+                "tags": [
+                    "Room"
+                ],
+                "summary": "Get hotels of a specific room",
+                "description": "Get hotels of a specific room by ID",
+                "operationId": "ec2ab8473e3ef4a3d912e9696abda626",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the room",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "404": {
+                        "description": "Room not found"
+                    }
+                }
+            }
+        },
+        "/api/room/{id}/guests": {
+            "get": {
+                "tags": [
+                    "Room"
+                ],
+                "summary": "Get guests of a specific room",
+                "description": "Get guests of a specific room by ID",
+                "operationId": "9852f7985d39209ab6aea43425d08c71",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the room",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "404": {
+                        "description": "room not found"
+                    }
+                }
+            }
+        },
+        "/api/room/{room}/guests": {
+            "post": {
+                "tags": [
+                    "Room"
+                ],
+                "summary": "Add guests to a specific room",
+                "description": "Add guests to a specific room by ID",
+                "operationId": "ef88ca290aba5589e50429f49b7bb127",
+                "parameters": [
+                    {
+                        "name": "room",
+                        "in": "path",
+                        "description": "ID of the room",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "room_id",
+                                    "guest_id"
+                                ],
+                                "properties": {
+                                    "room_id": {
+                                        "type": "integer",
+                                        "example": "1"
+                                    },
+                                    "guest_id": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer",
+                                            "example": 1
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Guests added successfully"
+                    },
+                    "404": {
+                        "description": "room not found"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Room"
+                ],
+                "summary": "Remove guests from a specific room",
+                "description": "Remove guests from a specific room by ID",
+                "operationId": "9b7a39939fdad92915568e3398db2a3b",
+                "parameters": [
+                    {
+                        "name": "room",
+                        "in": "path",
+                        "description": "ID of the room",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "room_id",
+                                    "guest_id"
+                                ],
+                                "properties": {
+                                    "room_id": {
+                                        "type": "integer",
+                                        "example": "1"
+                                    },
+                                    "guest_id": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer",
+                                            "example": 1
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Guests removed successfully"
+                    },
+                    "404": {
+                        "description": "room not found"
+                    }
+                }
+            }
+        },
+        "/api/service": {
+            "get": {
+                "tags": [
+                    "Service"
+                ],
+                "summary": "Get all services",
+                "description": "List of services",
+                "operationId": "a1d1d1d1937d6ed895e050186e3c1750",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Service"
+                ],
+                "summary": "Create a new service",
+                "description": "Create a new service with the provided details",
+                "operationId": "e2348999f2c883adc269bd7810760f1c",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "description",
+                                    "category_id"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "integer",
+                                        "example": "Service"
+                                    },
+                                    "description": {
+                                        "type": "integer",
+                                        "example": "Description"
+                                    },
+                                    "category_id": {
+                                        "type": "integer",
+                                        "example": "1"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Service created successfully"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                }
+            }
+        },
+        "/api/service/{id}": {
+            "get": {
+                "tags": [
+                    "Service"
+                ],
+                "summary": "Get a specific service",
+                "description": "Retrieve a specific service by ID",
+                "operationId": "c9da8db4522a54707000d628a12b467d",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the service",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "404": {
+                        "description": "Service not found"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Service"
+                ],
+                "summary": "Update an existing service",
+                "description": "Update an existing service by ID",
+                "operationId": "1c567f74875792370994cfe7151af218",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the service",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "description",
+                                    "category_id"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "integer",
+                                        "example": "Updated Service"
+                                    },
+                                    "description": {
+                                        "type": "integer",
+                                        "example": "Updated Description"
+                                    },
+                                    "category_id": {
+                                        "type": "integer",
+                                        "example": "2"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Service updated successfully"
+                    },
+                    "404": {
+                        "description": "Service not found"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Service"
+                ],
+                "summary": "Delete a specific service",
+                "description": "Delete a specific service by ID",
+                "operationId": "37d170d40a128108cade24e799dcb661",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the service",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Service deleted successfully"
+                    },
+                    "404": {
+                        "description": "Service not found"
+                    }
+                }
+            }
+        },
+        "/api/service/search/{name}": {
+            "get": {
+                "tags": [
+                    "Service"
+                ],
+                "summary": "Search services by name",
+                "description": "Search services by name",
+                "operationId": "b9adeca4214fe62194c7c3408b7dfaee",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "path",
+                        "description": "Name of the service",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                }
+            }
+        },
+        "/api/service/{id}/category": {
+            "get": {
+                "tags": [
+                    "Service"
+                ],
+                "summary": "Get categories of a specific service",
+                "description": "Get categories of a specific service by ID",
+                "operationId": "96746d0b479517a29bec9acbd2abd157",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the service",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "404": {
+                        "description": "Service not found"
+                    }
+                }
+            }
+        },
+        "/api/service/{id}/hotels": {
+            "get": {
+                "tags": [
+                    "Service"
+                ],
+                "summary": "Get hotels of a specific service",
+                "description": "Get hotels of a specific service by ID",
+                "operationId": "5c5da4d2fc50de6356b8880cfb65d8b1",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the service",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "404": {
+                        "description": "Service not found"
+                    }
+                }
+            }
+        },
+        "/api/service/{service}/hotels": {
+            "post": {
+                "tags": [
+                    "Service"
+                ],
+                "summary": "Add hotels to a specific service",
+                "description": "Add hotels to a specific service by ID",
+                "operationId": "bf1775f69b816175cff1c9c93975f6c6",
+                "parameters": [
+                    {
+                        "name": "service",
+                        "in": "path",
+                        "description": "ID of the service",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "service_id",
+                                    "hotel_id"
+                                ],
+                                "properties": {
+                                    "service_id": {
+                                        "type": "integer",
+                                        "example": "1"
+                                    },
+                                    "hotel_id": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer",
+                                            "example": 1
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Hotels added successfully"
+                    },
+                    "404": {
+                        "description": "service not found"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Service"
+                ],
+                "summary": "Remove hotels from a specific service",
+                "description": "Remove hotels from a specific service by ID",
+                "operationId": "b272c03ce4d0bcbc51915607bbd5fb2c",
+                "parameters": [
+                    {
+                        "name": "service",
+                        "in": "path",
+                        "description": "ID of the service",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "service_id",
+                                    "hotel_id"
+                                ],
+                                "properties": {
+                                    "service_id": {
+                                        "type": "integer",
+                                        "example": "1"
+                                    },
+                                    "hotel_id": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer",
+                                            "example": 1
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Hotels removed successfully"
+                    },
+                    "404": {
+                        "description": "service not found"
+                    }
+                }
+            }
+        },
+        "/api/service/{id}/guests": {
+            "get": {
+                "tags": [
+                    "Service"
+                ],
+                "summary": "Get guests of a specific service",
+                "description": "Get guests of a specific service by ID",
+                "operationId": "7b083b2c0b5dd13e80b049f19a612ab1",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the service",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "404": {
+                        "description": "service not found"
+                    }
+                }
+            }
+        },
+        "/api/service/{service}/guests": {
+            "post": {
+                "tags": [
+                    "Service"
+                ],
+                "summary": "Add guests to a specific service",
+                "description": "Add guests to a specific service by ID",
+                "operationId": "cde3adca4ed0c378066a4cbb8df4d980",
+                "parameters": [
+                    {
+                        "name": "service",
+                        "in": "path",
+                        "description": "ID of the service",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "service_id",
+                                    "guest_id"
+                                ],
+                                "properties": {
+                                    "service_id": {
+                                        "type": "integer",
+                                        "example": "1"
+                                    },
+                                    "guest_id": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer",
+                                            "example": 1
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Guests added successfully"
+                    },
+                    "404": {
+                        "description": "service not found"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Service"
+                ],
+                "summary": "Remove guests from a specific service",
+                "description": "Remove guests from a specific service by ID",
+                "operationId": "49555ba452fc076cdb99ee71e9d6282e",
+                "parameters": [
+                    {
+                        "name": "service",
+                        "in": "path",
+                        "description": "ID of the service",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "service_id",
+                                    "guest_id"
+                                ],
+                                "properties": {
+                                    "service_id": {
+                                        "type": "integer",
+                                        "example": "1"
+                                    },
+                                    "guest_id": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer",
+                                            "example": 1
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Guests removed successfully"
+                    },
+                    "404": {
+                        "description": "service not found"
+                    }
+                }
+            }
+        },
+        "/api/type": {
+            "get": {
+                "tags": [
+                    "Type"
+                ],
+                "summary": "Get all types",
+                "description": "List of types",
+                "operationId": "32c83947282f9e91ae475b14fd66b59c",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Type"
+                ],
+                "summary": "Create a new type",
+                "description": "Create a new type with the provided details",
+                "operationId": "b6684eafa63329cc4d6aeb2ab72b144d",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name, price, capacity"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Type Name"
+                                    },
+                                    "price": {
+                                        "type": "number",
+                                        "example": "100.00"
+                                    },
+                                    "capacity": {
+                                        "type": "integer",
+                                        "example": "2"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Type created successfully"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                }
+            }
+        },
+        "/api/type/{id}": {
+            "get": {
+                "tags": [
+                    "Type"
+                ],
+                "summary": "Get a specific type",
+                "description": "Retrieve a specific type by ID",
+                "operationId": "9572a27cc5f01f6c978918e34b8ca885",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the type",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "404": {
+                        "description": "Type not found"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Type"
+                ],
+                "summary": "Update an existing type",
+                "description": "Update an existing type by ID",
+                "operationId": "4654b432994b50d24780aa0ec92924a8",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the type",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name, price, capacity"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Type Name"
+                                    },
+                                    "price": {
+                                        "type": "number",
+                                        "example": "100.00"
+                                    },
+                                    "capacity": {
+                                        "type": "integer",
+                                        "example": "2"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Type updated successfully"
+                    },
+                    "404": {
+                        "description": "Type not found"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Type"
+                ],
+                "summary": "Delete a specific type",
+                "description": "Delete a specific type by ID",
+                "operationId": "73157d42d582032969e212a7c94ddbb2",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the type",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Type deleted successfully"
+                    },
+                    "404": {
+                        "description": "Type not found"
+                    }
+                }
+            }
+        },
+        "/api/type/search/{name}": {
+            "get": {
+                "tags": [
+                    "Type"
+                ],
+                "summary": "Search types by name",
+                "description": "Search types by name",
+                "operationId": "28a8407543dde8503f74e78b7846dc87",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "path",
+                        "description": "Name of the type",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                }
+            }
+        },
+        "/api/type/{id}/rooms": {
+            "get": {
+                "tags": [
+                    "Type"
+                ],
+                "summary": "Get rooms of a specific type",
+                "description": "Get rooms of a specific type by ID",
+                "operationId": "154d0032b21f16b87099789013000c55",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the type",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "404": {
+                        "description": "Type not found"
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Category",
+            "description": "API Endpoints of Category Controller"
+        },
+        {
+            "name": "Guest",
+            "description": "API Endpoints of Guest Controller"
+        },
+        {
+            "name": "Hotel",
+            "description": "API Endpoints of Hotel Controller"
+        },
+        {
+            "name": "GuestService",
+            "description": "API Endpoints of GuestService Controller"
+        },
+        {
+            "name": "HotelService",
+            "description": "API Endpoints of HotelService Controller"
+        },
+        {
+            "name": "RoomGuest",
+            "description": "API Endpoints of RoomGuest Controller"
+        },
+        {
+            "name": "Room",
+            "description": "API Endpoints of Room Controller"
+        },
+        {
+            "name": "Service",
+            "description": "API Endpoints of Service Controller"
+        },
+        {
+            "name": "Type",
+            "description": "API Endpoints of Type Controller"
+        }
+    ]
+}
