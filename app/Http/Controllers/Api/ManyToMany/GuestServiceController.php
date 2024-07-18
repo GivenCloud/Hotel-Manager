@@ -152,6 +152,7 @@ class GuestServiceController extends Controller
     public function updateGuests(StoreGuestRequest $request)
     {
         $service = Service::findOrFail($request->service_id);
+        $service->guests()->detach();
         $service->guests()->sync($request->guest_ids);
         return response()->json($service->guests()->get(), 200);
     }
@@ -181,6 +182,7 @@ class GuestServiceController extends Controller
     public function updateServices(StoreServiceRequest $request)
     {
         $guest = Guest::findOrFail($request->guest_id);
+        $guest->services()->detach();
         $guest->services()->sync($request->service_ids);
         return response()->json($guest->services()->get(), 200);
     }

@@ -1609,30 +1609,58 @@
                 }
             }
         },
-        "/api/room-guests/add-rooms": {
+        "/api/room-guests/{guest}/add-rooms": {
             "post": {
                 "tags": [
                     "RoomGuest"
                 ],
                 "summary": "Add rooms to a guest",
                 "description": "Add rooms to a guest",
-                "operationId": "04814971e3bdb3c0b00898ad3dfd5b5b",
+                "operationId": "f87642d9663013dab9258d5fd704c906",
+                "parameters": [
+                    {
+                        "name": "guest",
+                        "in": "path",
+                        "description": "ID of the guest",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
                 "requestBody": {
                     "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
+                                "required": [
+                                    "guest_id",
+                                    "room_id",
+                                    "checkInDate",
+                                    "checkOutDate"
+                                ],
                                 "properties": {
                                     "guest_id": {
                                         "type": "integer",
                                         "example": 1
                                     },
-                                    "room_ids": {
+                                    "room_id": {
                                         "type": "array",
                                         "items": {
                                             "type": "integer",
                                             "example": 1
                                         }
+                                    },
+                                    "checkInDate": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2021-10-01"
+                                    },
+                                    "checkOutDate": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2021-10-10"
                                     }
                                 },
                                 "type": "object"
@@ -1647,30 +1675,58 @@
                 }
             }
         },
-        "/api/room-guests/add-guests": {
+        "/api/room-guests/{room}/add-guests": {
             "post": {
                 "tags": [
                     "RoomGuest"
                 ],
                 "summary": "Add guests to a room",
                 "description": "Add guests to a room",
-                "operationId": "de5df8dd22c7b169ecf0ee9ed7b8a941",
+                "operationId": "d8c21779adc04f886151c84a9a5ec29c",
+                "parameters": [
+                    {
+                        "name": "room",
+                        "in": "path",
+                        "description": "ID of the room",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
                 "requestBody": {
                     "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
+                                "required": [
+                                    "guest_id",
+                                    "room_id",
+                                    "checkInDate",
+                                    "checkOutDate"
+                                ],
                                 "properties": {
                                     "room_id": {
                                         "type": "integer",
                                         "example": 1
                                     },
-                                    "guest_ids": {
+                                    "guest_id": {
                                         "type": "array",
                                         "items": {
                                             "type": "integer",
                                             "example": 1
                                         }
+                                    },
+                                    "checkInDate": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2021-10-01"
+                                    },
+                                    "checkOutDate": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2021-10-10"
                                     }
                                 },
                                 "type": "object"
@@ -1743,30 +1799,58 @@
                 }
             }
         },
-        "/api/room-guests/update-rooms": {
+        "/api/room-guests/{guest}/update-rooms": {
             "put": {
                 "tags": [
                     "RoomGuest"
                 ],
                 "summary": "Update rooms for a guest",
                 "description": "Update rooms for a guest",
-                "operationId": "185e245cb03f21ac01da16a1f3381d78",
+                "operationId": "a3c4c4c3478ef57042a81c84fe894bfd",
+                "parameters": [
+                    {
+                        "name": "guest",
+                        "in": "path",
+                        "description": "ID of the guest",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
                 "requestBody": {
                     "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
+                                "required": [
+                                    "guest_id",
+                                    "room_id",
+                                    "checkInDate",
+                                    "checkOutDate"
+                                ],
                                 "properties": {
                                     "guest_id": {
                                         "type": "integer",
                                         "example": 1
                                     },
-                                    "room_ids": {
+                                    "room_id": {
                                         "type": "array",
                                         "items": {
                                             "type": "integer",
                                             "example": 1
                                         }
+                                    },
+                                    "checkInDate": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2021-10-01"
+                                    },
+                                    "checkOutDate": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2021-10-10"
                                     }
                                 },
                                 "type": "object"
@@ -1781,30 +1865,58 @@
                 }
             }
         },
-        "/api/room-guests/update-guests": {
+        "/api/room-guests/{room}/update-guests": {
             "put": {
                 "tags": [
                     "RoomGuest"
                 ],
                 "summary": "Update guests for a room",
                 "description": "Update guests for a room",
-                "operationId": "14af350a8759ac6cd0e9753049545c4d",
+                "operationId": "a727556ff38f93461e77902bf696ea79",
+                "parameters": [
+                    {
+                        "name": "room",
+                        "in": "path",
+                        "description": "ID of the room",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
                 "requestBody": {
                     "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
+                                "required": [
+                                    "guest_id",
+                                    "room_id",
+                                    "checkInDate",
+                                    "checkOutDate"
+                                ],
                                 "properties": {
                                     "room_id": {
                                         "type": "integer",
                                         "example": 1
                                     },
-                                    "guest_ids": {
+                                    "guest_id": {
                                         "type": "array",
                                         "items": {
                                             "type": "integer",
                                             "example": 1
                                         }
+                                    },
+                                    "checkInDate": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2021-10-01"
+                                    },
+                                    "checkOutDate": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2021-10-10"
                                     }
                                 },
                                 "type": "object"
@@ -2136,13 +2248,15 @@
                         "application/json": {
                             "schema": {
                                 "required": [
+                                    "guest_id",
                                     "room_id",
-                                    "guest_id"
+                                    "checkInDate",
+                                    "checkOutDate"
                                 ],
                                 "properties": {
                                     "room_id": {
                                         "type": "integer",
-                                        "example": "1"
+                                        "example": 1
                                     },
                                     "guest_id": {
                                         "type": "array",
@@ -2150,6 +2264,16 @@
                                             "type": "integer",
                                             "example": 1
                                         }
+                                    },
+                                    "checkInDate": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2021-10-01"
+                                    },
+                                    "checkOutDate": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2021-10-10"
                                     }
                                 },
                                 "type": "object"
@@ -2191,20 +2315,32 @@
                         "application/json": {
                             "schema": {
                                 "required": [
+                                    "guest_id",
                                     "room_id",
-                                    "guest_id"
+                                    "checkInDate",
+                                    "checkOutDate"
                                 ],
                                 "properties": {
-                                    "room_id": {
-                                        "type": "integer",
-                                        "example": "1"
-                                    },
                                     "guest_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "room_id": {
                                         "type": "array",
                                         "items": {
                                             "type": "integer",
                                             "example": 1
                                         }
+                                    },
+                                    "checkInDate": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2021-10-01"
+                                    },
+                                    "checkOutDate": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2021-10-10"
                                     }
                                 },
                                 "type": "object"

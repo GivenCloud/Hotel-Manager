@@ -152,6 +152,7 @@ class HotelServiceController extends Controller
     public function updateHotels(StoreHotelRequest $request)
     {
         $service = Service::findOrFail($request->service_id);
+        $service->hotels()->detach();
         $service->hotels()->sync($request->hotel_ids);
         return response()->json($service->hotels()->get(), 200);
     }
@@ -181,6 +182,7 @@ class HotelServiceController extends Controller
     public function updateServices(StoreServiceRequest $request)
     {
         $hotel = Hotel::findOrFail($request->hotel_id);
+        $hotel->services()->detach();
         $hotel->services()->sync($request->service_ids);
         return response()->json($hotel->services()->get(), 200);
     }

@@ -49,10 +49,10 @@ Route::put('/guest-services/update-guests', [GuestServiceController::class, 'upd
 Route::put('/guest-services/update-services', [GuestServiceController::class, 'updateServices']);
 
 Route::apiResource('room-guest', RoomGuestController::class)->except(['store', 'update']);
-Route::post('/room-guests/add-rooms', [RoomGuestController::class, 'storeRooms']);
-Route::post('/room-guests/add-guests', [RoomGuestController::class, 'storeGuests']);
-Route::put('/room-guests/update-rooms', [RoomGuestController::class, 'updateRooms']);
-Route::put('/room-guests/update-guests', [RoomGuestController::class, 'updateGuests']);
+Route::post('/room-guests/{guest}/add-rooms', [RoomGuestController::class, 'storeRooms']);
+Route::post('/room-guests/{room}/add-guests', [RoomGuestController::class, 'storeGuests']);
+Route::put('/room-guests/{guest}/update-rooms', [RoomGuestController::class, 'updateRooms']);
+Route::put('/room-guests/{room}/update-guests', [RoomGuestController::class, 'updateGuests']);
 
 // Rutas de servicios
 Route::get('service/search/{name}', [ServiceController::class, 'search']);

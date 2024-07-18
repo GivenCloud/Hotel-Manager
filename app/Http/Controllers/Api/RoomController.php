@@ -315,9 +315,11 @@ class RoomController extends Controller
      *    @OA\RequestBody(
      *       required=true,
      *       @OA\JsonContent(
-     *           required={"room_id", "guest_id"},
-    *            @OA\Property(property="room_id", type="integer", example="1"),
-     *           @OA\Property(property="guest_id", type="array", @OA\Items(type="integer", example=1))
+     *           required={"guest_id", "room_id", "checkInDate", "checkOutDate"},
+     *           @OA\Property(property="room_id", type="integer", example=1),
+     *           @OA\Property(property="guest_id", type="array", @OA\Items(type="integer", example=1)),
+     *           @OA\Property(property="checkInDate", type="string", format="date", example="2021-10-01"),
+     *           @OA\Property(property="checkOutDate", type="string", format="date", example="2021-10-10"),
      *       )
      *    ),
      *    @OA\Response(
@@ -359,9 +361,11 @@ class RoomController extends Controller
      *    @OA\RequestBody(
      *       required=true,
      *       @OA\JsonContent(
-     *           required={"room_id" ,"guest_id"},
-     *           @OA\Property(property="room_id", type="integer", example="1"),
-     *           @OA\Property(property="guest_id", type="array", @OA\Items(type="integer", example=1))
+     *           required={"guest_id", "room_id", "checkInDate", "checkOutDate"},
+     *           @OA\Property(property="guest_id", type="integer", example=1),
+     *           @OA\Property(property="room_id", type="array", @OA\Items(type="integer", example=1)),
+     *           @OA\Property(property="checkInDate", type="string", format="date", example="2021-10-01"),
+     *           @OA\Property(property="checkOutDate", type="string", format="date", example="2021-10-10"),
      *       )
      *    ),
      *    @OA\Response(
