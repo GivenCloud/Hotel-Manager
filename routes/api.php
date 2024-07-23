@@ -101,6 +101,6 @@ Route::delete('guest/{guest}/services', [GuestController::class, 'removeServices
 // Ruta de fallback para manejar rutas no encontradas
 Route::fallback(function () {
     return response()->json([
-        'message' => 'Esta ruta no existe o no ha sido encontrada.'
+        'message' => 'This route is not found or does not exist'
     ], 404);
 });

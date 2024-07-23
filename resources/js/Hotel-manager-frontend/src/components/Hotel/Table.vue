@@ -1,44 +1,64 @@
 <template>
-  <div class="container min-w-full min-h-full mx-auto p-4">
-    <h1 class="text-2xl font-bold mb-4 text-gray-100">Hotel List</h1>
+  <div class="bg-gray-800 min-h-screen p-4">
+    <h1 class="text-3xl font-bold mb-6 text-gray-100">Hotel List</h1>
 
     <div class="flex justify-between items-center mb-4">
-      <div>
+      <div class="flex items-center">
         <label for="itemsPerPage" class="mr-2 text-white">Items per page:</label>
-        <select id="itemsPerPage" v-model="itemsPerPage" class="p-2 text-black border border-gray-300 rounded-lg shadow-sm">
+        <select
+          id="itemsPerPage"
+          v-model="itemsPerPage"
+          class="p-2 bg-gray-700 text-white border border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+        >
           <option v-for="option in [5, 10, 20]" :key="option" :value="option">{{ option }}</option>
         </select>
       </div>
-      <div>
-        <input type="text" v-model="searchQuery" placeholder="Search..." class="p-2 border border-gray-300 rounded-lg shadow-sm" />
+      <div class="flex items-center">
+        <router-link
+          :to="{ name: 'HotelCreate' }"
+          class="p-2 bg-gray-700 text-white border border-gray-600 rounded-lg shadow-sm hover:bg-gray-600 disabled:opacity-50 mr-4"
+        >
+          Create new hotel
+        </router-link>
+        <div>
+          <input
+            type="text"
+            v-model="searchQuery"
+            placeholder="Search..."
+            class="p-2 bg-gray-700 text-white border border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+          />
+        </div>
       </div>
     </div>
 
-    <div class="overflow-x-auto border border-gray-200 rounded-lg shadow-sm">
-      <table class="min-w-full bg-gray-100">
+    <div class="overflow-x-auto border border-gray-700 rounded-lg shadow-lg">
+      <table class="min-w-full table-auto bg-gray-900 text-white">
         <thead>
           <tr>
             <th
               v-for="(col, index) in columns"
               :key="index"
-              class="py-2 px-4 border-b border-gray-300 cursor-pointer"
+              class="py-3 px-4 border-b border-gray-700 cursor-pointer hover:bg-gray-700"
               @click="sortTable(index)"
             >
               {{ col.label }}
-              <span v-if="sortKey === index">
+              <span v-if="sortKey === index" class="ml-2">
                 {{ sortOrder === 1 ? '▲' : sortOrder === -1 ? '▼' : '' }}
               </span>
             </th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="item in paginatedData" :key="item.id">
-            <td class="py-2 px-4 border-b border-gray-300">{{ item.name }}</td>
-            <td class="py-2 px-4 border-b border-gray-300">{{ item.address }}</td>
-            <td class="py-2 px-4 border-b border-gray-300">{{ item.phone }}</td>
-            <td class="py-2 px-4 border-b border-gray-300">{{ item.email }}</td>
-            <td class="py-2 px-4 border-b border-gray-300">
-              <a :href="item.website" target="_blank" class="text-blue-500 hover:underline">{{ item.website }}</a>
+          <tr v-for="item in paginatedData" :key="item.id" class="hover:bg-gray-800">
+            <td class="py-3 px-4 border-b border-gray-700">{{ item.name }}</td>
+            <td class="py-3 px-4 border-b border-gray-700">{{ item.address }}</td>
+            <td class="py-3 px-4 border-b border-gray-700">{{ item.phone }}</td>
+            <td class="py-3 px-4 border-b border-gray-700">{{ item.email }}</td>
+            <td class="py-3 px-4 border-b border-gray-700">
+              <a :href="item.website" target="_blank" class="text-blue-400 hover:underline">{{ item.website }}</a>
+            </td>
+            <td class="py-3 px-4 border-b border-gray-700">
+              <router-link :to="{ name: 'HotelEdit', params: { id: item.id } }" class="text-blue-400 hover:underline">Edit </router-link>
             </td>
           </tr>
         </tbody>
@@ -46,12 +66,25 @@
     </div>
 
     <div class="flex justify-between items-center mt-4">
-      <button @click="prevPage" :disabled="currentPage === 1" class="p-2 text-black border border-gray-300 rounded-lg bg-gray-100 shadow-sm">Previous</button>
+      <button
+        @click="prevPage"
+        :disabled="currentPage === 1"
+        class="p-2 bg-gray-700 text-white border border-gray-600 rounded-lg shadow-sm hover:bg-gray-600 disabled:opacity-50"
+      >
+        Previous
+      </button>
       <span class="text-gray-100">Page {{ currentPage }} of {{ totalPages }}</span>
-      <button @click="nextPage" :disabled="currentPage === totalPages" class="p-2 text-black border border-gray-300 rounded-lg bg-gray-100 shadow-sm">Next</button>
+      <button
+        @click="nextPage"
+        :disabled="currentPage === totalPages"
+        class="p-2 bg-gray-700 text-white border border-gray-600 rounded-lg shadow-sm hover:bg-gray-600 disabled:opacity-50"
+      >
+        Next
+      </button>
     </div>
   </div>
 </template>
+
 
 <script lang="ts">
 import { defineComponent, ref, computed, watch } from 'vue';
@@ -73,7 +106,8 @@ export default defineComponent({
       { label: 'Address', key: 'address' },
       { label: 'Phone', key: 'phone' },
       { label: 'Email', key: 'email' },
-      { label: 'Website', key: 'website' }
+      { label: 'Website', key: 'website' },
+      { label: 'Actions', key: 'actions' },
     ]);
 
     const itemsPerPage = ref(10);
@@ -155,12 +189,12 @@ export default defineComponent({
 
 <style scoped>
 .container {
-  background: linear-gradient(to right, #141E30, #243B55);
+  background: #222831;
   min-height: 100vh;
 }
 
 .table {
   border-radius: 0.5rem; /* Redondea las esquinas */
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); /* Agrega una sombra sutil */
+  background-color: #EEEEEE;
 }
 </style>

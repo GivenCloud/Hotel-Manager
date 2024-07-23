@@ -32,9 +32,23 @@ class StoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'number' => 'required|numeric|max:400|unique:rooms,number,'.$this->route('room.id'),
+            'number' => 'required|numeric|max:9999|unique:rooms,number,'.$this->route('room.id'),
             'type_id' => 'required|integer',
             'hotel_id' => 'required|integer',
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'number.required' => 'The number field is required',
+            'number.numeric' => 'The number field must be a number',
+            'number.max' => 'The number field must be at most 9999',
+            'number.unique' => 'The number field must be unique',
+            'type_id.required' => 'The type_id field is required',
+            'type_id.integer' => 'The type_id field must be an integer',
+            'hotel_id.required' => 'The hotel_id field is required',
+            'hotel_id.integer' => 'The hotel_id field must be an integer',
         ];
     }
 }

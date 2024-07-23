@@ -32,7 +32,18 @@ class StoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|min:3|max:150, unique:categories,name' . $this->route('category.id')
+            'name' => 'required|string|min:3|max:30, unique:categories,name' . $this->route('category.id')
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'name.required' => 'The name field is required',
+            'name.string' => 'The name field must be a string',
+            'name.min' => 'The name field must be at least 3 characters',
+            'name.max' => 'The name field must be at most 30 characters',
+            'name.unique' => 'The name field must be unique',
         ];
     }
 }

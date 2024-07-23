@@ -13,7 +13,18 @@ const router = createRouter({
     {
       path: '/hotel',
       name: 'Hotel',
-      component: () => import('@/components/Hotel/Index.vue')
+      component: () => import('@/components/Hotel/Index.vue'),
+    },
+    {
+      path: '/hotel/create',
+      name: 'HotelCreate',
+      component: () => import('@/components/Hotel/CreateView.vue')
+    },
+    {
+      path: '/hotel/:id/edit',
+      name: 'HotelEdit',
+      component: () => import('@/components/Hotel/EditView.vue'),
+      props: true,
     },
     {
       path: '/room',

@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('name', 40);
             $table->string('address' , 100);
             $table->string('phone', 20);
-            $table->string('email', 50);
+            $table->string('email', 256);
             $table->string('website', 150);
             $table->timestamp('created_at')->nullable(false)->useCurrent();
             $table->timestamp('updated_at')->useCurrentOnUpdate();

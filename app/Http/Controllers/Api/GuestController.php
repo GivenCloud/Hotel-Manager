@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Api\ManyToMany\RoomGuestController;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Guest\StoreRequest;
 use App\Http\Requests\ManyToMany\GuestService\StoreServiceRequest;
@@ -277,12 +278,7 @@ class GuestController extends Controller
      */
     public function addRooms(Guest $guest, StoreRoomRequest $request)
     {
-        $roomIds = $request->validated()['room_id'] ?? [];
-        $guest->rooms()->attach($roomIds, [
-            'checkInDate' => $request->validated()['checkInDate'],
-            'checkOutDate' => $request->validated()['checkOutDate'],
-        ]);
-        return response()->json($guest->rooms, 200);
+        return app(RoomGuestController::class)->storeRooms($guest, $request);
     }
 
     /**
