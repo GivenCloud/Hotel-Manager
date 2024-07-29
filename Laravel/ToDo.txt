@@ -1,0 +1,14 @@
+solo he añadido las migraciones, queda hacer todo lo demas.
+cosas que se me ocurren:
+-añadir vite/tailwindcss +
+-añadir vue +
+-modelos +
+-request +
+-api.php +
+-controladores api +
+-factories +
+-seeders +
+-swagger/postman +
+-tests
+
+
