@@ -1,12 +1,12 @@
 meter un atributo precio en la relacion entre guest y room
 
 incluir las acciones de:
-- hoteles de un servicio
-- servicios de un hotel
-- servicios de un huesped
-- habitaciones de un huesped
-- huespedes de una habitacion
-- huespedes de un servicio
+- hoteles de un servicio ✓
+- servicios de un hotel ✓
+- servicios de un huesped ✓
+- habitaciones de un huesped ✓
+- huespedes de una habitacion ✓
+- huespedes de un servicio ✓
 
 incluir una vista de show?
 
@@ -17,3 +17,10 @@ incluir autenticacion (register, login)
 modificar los logos y titulos de las paginas
 
 borrar todas las cosas que no necesito de la barra lateral
+
+
+
+
+//Error: comprobar que las peticiones solo aceptan entero y no string
+//Ademas tengo que ver lo de la tabla pivote RoomGuest, hay que dejar que se puedan crear varias relaciones entre el mismo huesped y la misma habitacion siempre que el checkIn y el checkOut sean diferentes en las relaciones y la fecha de fin de uno este antes que la fecha de inicio del otro.
+Tengo que ver como incluyo los dos input para especificar las fechas checkIn y checkOut en las vistas y procesarlos para hacer el post, lo mismo con el delete, pero tengo que obtener las fechas y mostrarlas para que se pueda elegir cual se quiere eliminar

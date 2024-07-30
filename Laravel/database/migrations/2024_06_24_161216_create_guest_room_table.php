@@ -27,7 +27,7 @@ return new class extends Migration
             $table->timestamp('created_at')->nullable(false)->useCurrent();
             $table->timestamp('updated_at')->useCurrentOnUpdate()->nullable();
 
-            $table->unique(['room_id', 'guest_id']);
+            $table->index(['room_id', 'guest_id', 'checkInDate', 'checkOutDate']);
         });
     }
 

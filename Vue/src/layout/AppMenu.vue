@@ -11,12 +11,12 @@ const model = ref([
     {
         label: 'Items',
         items: [
-            {label: 'Hotels', icon: 'pi pi-fw pi-building', to: '/items/hotels'},
-            {label: 'Guests', icon: 'pi pi-fw pi-users', to: '/items/guests'},
-            {label: 'Rooms', icon: 'pi pi-fw pi-box', to: '/items/rooms'},
-            {label: 'Types', icon: 'pi pi-fw pi-list', to: '/items/types'},
-            {label: 'Services', icon: 'pi pi-fw pi-table', to: '/items/services'},
-            {label: 'Categories', icon: 'pi pi-fw pi-tags', to: '/items/categories'},
+            {label: 'Hotels', icon: 'pi pi-fw pi-building', to: '/items/hotel'},
+            {label: 'Guests', icon: 'pi pi-fw pi-users', to: '/items/guest'},
+            {label: 'Rooms', icon: 'pi pi-fw pi-box', to: '/items/room'},
+            {label: 'Types', icon: 'pi pi-fw pi-list', to: '/items/type'},
+            {label: 'Services', icon: 'pi pi-fw pi-table', to: '/items/service'},
+            {label: 'Categories', icon: 'pi pi-fw pi-tags', to: '/items/category'},
         ]
     },
     {

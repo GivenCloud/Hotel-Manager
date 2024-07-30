@@ -439,17 +439,17 @@
                 }
             }
         },
-        "/api/guest/{id}/rooms": {
+        "/api/guest/{guestId}/rooms": {
             "get": {
                 "tags": [
                     "Guest"
                 ],
                 "summary": "Get rooms of a specific guest",
                 "description": "Get rooms of a specific guest by ID",
-                "operationId": "5db7f10ac82052b461280c6d8fa653ff",
+                "operationId": "98aee490827f36a7fb5345a5fc55d316",
                 "parameters": [
                     {
-                        "name": "id",
+                        "name": "guestId",
                         "in": "path",
                         "description": "ID of the guest",
                         "required": true,
@@ -461,7 +461,104 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Successful operation"
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer",
+                                                "example": 1
+                                            },
+                                            "number": {
+                                                "type": "string",
+                                                "example": "101"
+                                            },
+                                            "checkInDate": {
+                                                "type": "string",
+                                                "format": "date",
+                                                "example": "2024-07-30"
+                                            },
+                                            "checkOutDate": {
+                                                "type": "string",
+                                                "format": "date",
+                                                "example": "2024-08-01"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Guest not found"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Guest"
+                ],
+                "summary": "Remove rooms from a guest",
+                "description": "Remove rooms from a specific guest by ID and matching dates",
+                "operationId": "5956964231d48a72ef6bddbb6c8c7a49",
+                "parameters": [
+                    {
+                        "name": "guestId",
+                        "in": "path",
+                        "description": "ID of the guest",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "guest_id",
+                                    "room_id",
+                                    "checkInDate",
+                                    "checkOutDate"
+                                ],
+                                "properties": {
+                                    "guest_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "room_id": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer",
+                                            "example": 1
+                                        }
+                                    },
+                                    "checkInDate": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2021-10-01"
+                                    },
+                                    "checkOutDate": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2021-10-10"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Rooms removed successfully"
                     },
                     "404": {
                         "description": "Guest not found"
@@ -531,73 +628,6 @@
                 "responses": {
                     "200": {
                         "description": "Rooms added successfully"
-                    },
-                    "404": {
-                        "description": "Guest not found"
-                    }
-                }
-            },
-            "delete": {
-                "tags": [
-                    "Guest"
-                ],
-                "summary": "Remove rooms from a specific guest",
-                "description": "Remove rooms from a specific guest by ID",
-                "operationId": "4c3027fea29181c8a7e62ba204a4e6d3",
-                "parameters": [
-                    {
-                        "name": "guest",
-                        "in": "path",
-                        "description": "ID of the guest",
-                        "required": true,
-                        "schema": {
-                            "type": "integer",
-                            "format": "int64"
-                        }
-                    }
-                ],
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "required": [
-                                    "guest_id",
-                                    "room_id",
-                                    "checkInDate",
-                                    "checkOutDate"
-                                ],
-                                "properties": {
-                                    "guest_id": {
-                                        "type": "integer",
-                                        "example": 1
-                                    },
-                                    "room_id": {
-                                        "type": "array",
-                                        "items": {
-                                            "type": "integer",
-                                            "example": 1
-                                        }
-                                    },
-                                    "checkInDate": {
-                                        "type": "string",
-                                        "format": "date",
-                                        "example": "2021-10-01"
-                                    },
-                                    "checkOutDate": {
-                                        "type": "string",
-                                        "format": "date",
-                                        "example": "2021-10-10"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "rooms removed successfully"
                     },
                     "404": {
                         "description": "Guest not found"
@@ -1751,14 +1781,14 @@
                 }
             }
         },
-        "/api/room-guest/{id}": {
+        "/api/room-guest/book": {
             "get": {
                 "tags": [
                     "RoomGuest"
                 ],
                 "summary": "Get a specific room-guest",
-                "description": "Retrieve a specific roomguest by ID",
-                "operationId": "959088b547dfad31b5bc2cd83d6e5112",
+                "description": "Retrieve a specific room-guest by ID",
+                "operationId": "9751ecc99b28058243c3b5597751b938",
                 "parameters": [
                     {
                         "name": "id",
@@ -1774,34 +1804,6 @@
                 "responses": {
                     "200": {
                         "description": "Successful operation"
-                    },
-                    "404": {
-                        "description": "Room-Guest not found"
-                    }
-                }
-            },
-            "delete": {
-                "tags": [
-                    "RoomGuest"
-                ],
-                "summary": "Delete a specific room-guest",
-                "description": "Delete a specific room-guest by ID",
-                "operationId": "8199cecb49dfa24ce683efd02ce64095",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "ID of the room-guest",
-                        "required": true,
-                        "schema": {
-                            "type": "integer",
-                            "format": "int64"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Room-Guest deleted successfully"
                     },
                     "404": {
                         "description": "Room-Guest not found"
@@ -1937,6 +1939,36 @@
                 "responses": {
                     "200": {
                         "description": "Successful operation"
+                    }
+                }
+            }
+        },
+        "/api/room-guest/{id}": {
+            "delete": {
+                "tags": [
+                    "RoomGuest"
+                ],
+                "summary": "Delete a specific room-guest",
+                "description": "Delete a specific room-guest by ID",
+                "operationId": "8199cecb49dfa24ce683efd02ce64095",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the room-guest",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Room-Guest deleted successfully"
+                    },
+                    "404": {
+                        "description": "Room-Guest not found"
                     }
                 }
             }

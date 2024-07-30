@@ -8,12 +8,12 @@ import axios from 'axios';
 
 const toast = useToast();
 
-const products = ref(null);
+const products = ref<Type[]>([]);
 const productDialog = ref(false);
 const deleteProductDialog = ref(false);
 const deleteProductsDialog = ref(false);
-const product = ref<Type>({ value: null });
-const selectedProducts = ref(null);
+const product = ref<Type>({ id: null, name: '', price: 0, capacity: 0 });
+const selectedProducts = ref<Type[]>([]);
 const dt = ref(null);
 const filters = ref({});
 const submitted = ref(false);
@@ -23,12 +23,18 @@ const useTypes = new useType();
 onBeforeMount(() => {
     initFilters();
 });
-onMounted(() => {
-    useTypes.getTypes().then((data) => (products.value = data));
+
+onMounted(async () => {
+    try {
+        products.value = await useTypes.getTypes();
+    } catch (error) {
+        console.error('Error loading types:', error);
+        products.value = [];
+    }
 });
 
 const openNew = () => {
-    product.value = {};
+    product.value = { id: null, name: '', price: 0, capacity: 0 };
     submitted.value = false;
     productDialog.value = true;
 };
@@ -45,8 +51,7 @@ const formatCurrency = (value: number): string => {
 const saveProduct = async () => {
     submitted.value = true;
 
-    // Validar campos requeridos
-    if (!product.value.name || !product.value.price || !product.value.capacity) {
+    if (!product.value.name || isNaN(product.value.price) || isNaN(product.value.capacity)) {
         toast.add({ severity: 'error', summary: 'Error', detail: 'All fields are required', life: 3000 });
         return;
     }
@@ -55,59 +60,51 @@ const saveProduct = async () => {
         let response;
 
         if (product.value.id) {
-            // Realiza la petición PUT a la API de Laravel para actualizar el type
             response = await axios.put(`http://hotel-manager.test/api/type/${product.value.id}`, {
                 name: product.value.name,
-                price: product.value.price,
-                capacity: product.value.capacity,
+                price: Number(product.value.price),
+                capacity: Number(product.value.capacity),
             });
 
-            // Actualiza el type en la lista local
-            const index = products.value.findIndex((p:any) => p.id === product.value.id);
+            const index = products.value.findIndex(p => p.id === product.value.id);
             if (index !== -1) {
                 products.value[index] = response.data;
             }
 
-            // Muestra una notificación de éxito
             toast.add({ severity: 'success', summary: 'Successful', detail: 'Type Updated', life: 3000 });
         } else {
-            // Realiza la petición POST a la API de Laravel para crear un nuevo type
             response = await axios.post('http://hotel-manager.test/api/type', {
                 name: product.value.name,
-                price: product.value.price,
-                capacity: product.value.capacity,
+                price: Number(product.value.price),
+                capacity: Number(product.value.capacity),
             });
 
-            // Añade el nuevo type a la lista local
             products.value.push(response.data);
-
-            // Muestra una notificación de éxito
             toast.add({ severity: 'success', summary: 'Successful', detail: 'Type Created', life: 3000 });
         }
 
-        // Cierra el diálogo de creación/edición
         productDialog.value = false;
-        product.value = {};
+        product.value = { id: null, name: '', price: 0, capacity: 0 };
 
     } catch (error: unknown) {
-        if ((error as any).response && (error as any).response.data && (error as any).response.data.errors) {
-            // Maneja errores específicos de validación
-            const errors: Record<string, string[]> = (error as any).response.data.errors;
-            let errorMessage = 'Validation errors:';
+        handleSaveProductError(error);
+    }
+};
 
-            // Itera sobre los errores y agrega un mensaje para cada campo
-            for (const [field, messages] of Object.entries(errors)) {
-                messages.forEach((message: string) => {
-                    errorMessage += `\n- ${message}`;
-                });
-            }
+const handleSaveProductError = (error: unknown) => {
+    if ((error as any).response?.data?.errors) {
+        const errors: Record<string, string[]> = (error as any).response.data.errors;
+        let errorMessage = 'Validation errors:';
 
-            // Muestra las notificaciones de error
-            toast.add({ severity: 'error', summary: 'Validation Error', detail: errorMessage, life: 5000 });
-        } else {
-            // Maneja errores generales
-            toast.add({ severity: 'error', summary: 'Error', detail: 'Could not save type', life: 3000 });
+        for (const [field, messages] of Object.entries(errors)) {
+            messages.forEach((message) => {
+                errorMessage += `\n- ${message}`;
+            });
         }
+
+        toast.add({ severity: 'error', summary: 'Validation Error', detail: errorMessage, life: 5000 });
+    } else {
+        toast.add({ severity: 'error', summary: 'Error', detail: 'Could not save type', life: 3000 });
     }
 };
 
@@ -123,23 +120,12 @@ const confirmDeleteProduct = (editProduct: Type) => {
 
 const deleteProduct = async () => {
     try {
-        // Realiza la petición DELETE a la API de Laravel
         await axios.delete(`http://hotel-manager.test/api/type/${product.value.id}`);
-
-        // Filtra el producto eliminado de la lista local
-        products.value = products.value.filter((val: { id: any; }) => val.id !== product.value.id);
-        
-        // Cierra el diálogo de confirmación
+        products.value = products.value.filter(p => p.id !== product.value.id);
         deleteProductDialog.value = false;
-        
-        // Limpia el producto seleccionado
-        product.value = {};
-        
-        // Muestra una notificación de éxito
+        product.value = { id: null, name: '', price: 0, capacity: 0 };
         toast.add({ severity: 'success', summary: 'Successful', detail: 'Type Deleted', life: 3000 });
     } catch (error) {
-        // Maneja errores en la petición DELETE
-        console.error('Error deleting type:', error);
         toast.add({ severity: 'error', summary: 'Error', detail: 'Could not delete type', life: 3000 });
     }
 };
@@ -150,23 +136,15 @@ const confirmDeleteSelected = () => {
 
 const deleteSelectedProducts = async () => {
     try {
-        // Realiza todas las peticiones DELETE concurrentemente
-        await Promise.all(selectedProducts.value.map((type: Type) => 
+        await Promise.all(selectedProducts.value.map(type =>
             axios.delete(`http://hotel-manager.test/api/type/${type.id}`)
         ));
 
-        // Filtra los typees locales eliminando los seleccionados
-        products.value = products.value.filter((val:any) => !selectedProducts.value.includes(val));
-        
-        // Cierra el diálogo de eliminación
+        products.value = products.value.filter(p => !selectedProducts.value.includes(p));
         deleteProductsDialog.value = false;
-        selectedProducts.value = null;
-
-        // Muestra una notificación de éxito
+        selectedProducts.value = [];
         toast.add({ severity: 'success', summary: 'Successful', detail: 'Types Deleted', life: 3000 });
     } catch (error) {
-        // Maneja errores en la petición DELETE
-        console.error('Error deleting types:', error);
         toast.add({ severity: 'error', summary: 'Error', detail: 'Could not delete types', life: 3000 });
     }
 };
@@ -186,7 +164,7 @@ const initFilters = () => {
                     <template v-slot:start>
                         <div class="my-2">
                             <Button label="New" icon="pi pi-plus" class="mr-2" severity="success" @click="openNew" />
-                            <Button label="Delete" icon="pi pi-trash" severity="danger" @click="confirmDeleteSelected" :disabled="!selectedProducts || !selectedProducts.length" />
+                            <Button label="Delete" icon="pi pi-trash" severity="danger" @click="confirmDeleteSelected" :disabled="!selectedProducts.length" />
                         </div>
                     </template>
                 </Toolbar>
@@ -201,7 +179,7 @@ const initFilters = () => {
                     :filters="filters"
                     paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                     :rowsPerPageOptions="[5, 10, 25]"
-                    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products"
+                    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} types"
                 >
                     <template #header>
                         <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
@@ -241,35 +219,32 @@ const initFilters = () => {
                 </DataTable>
 
                 <Dialog v-model:visible="productDialog" :style="{ width: '450px' }" header="Product Details" :modal="true" class="p-fluid">
-                    <img :src="'/demo/images/product/' + product.image" :alt="product.image" v-if="product.image" width="150" class="mt-0 mx-auto mb-5 block shadow-2" />
+                    <img v-if="product.image" :src="'/demo/images/product/' + product.image" :alt="product.image" width="150" class="mt-0 mx-auto mb-5 block shadow-2" />
                     <div class="field">
                         <label for="name">Name</label>
-                        <InputText id="name" v-model.trim="product.name" required="true" autofocus :invalid="submitted && !product.name" />
+                        <InputText id="name" v-model.trim="product.name" required autofocus :invalid="submitted && !product.name" />
                         <small class="p-invalid" v-if="submitted && !product.name">Name is required.</small>
                     </div>
                     <div class="field">
                         <label for="price">Price</label>
-                        <InputText id="price" v-model.trim="product.price" required="true" autofocus :invalid="submitted && !product.price" />
+                        <InputText id="price" v-model.trim="product.price" type="number" required autofocus :invalid="submitted && !product.price" />
                         <small class="p-invalid" v-if="submitted && !product.price">Price is required.</small>
                     </div>
                     <div class="field">
                         <label for="capacity">Capacity</label>
-                        <InputText id="capacity" v-model.trim="product.capacity" required="true" autofocus :invalid="submitted && !product.capacity" />
+                        <InputText id="capacity" v-model.trim="product.capacity" type="number" required autofocus :invalid="submitted && !product.capacity" />
                         <small class="p-invalid" v-if="submitted && !product.capacity">Capacity is required.</small>
                     </div>
                     <template #footer>
-                        <Button label="Cancel" icon="pi pi-times" text="" @click="hideDialog" />
-                        <Button label="Save" icon="pi pi-check" text="" @click="saveProduct" />
+                        <Button label="Cancel" icon="pi pi-times" text @click="hideDialog" />
+                        <Button label="Save" icon="pi pi-check" text @click="saveProduct" />
                     </template>
                 </Dialog>
 
                 <Dialog v-model:visible="deleteProductDialog" :style="{ width: '450px' }" header="Confirm" :modal="true">
                     <div class="flex align-items-center justify-content-center">
                         <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
-                        <span v-if="product"
-                            >Are you sure you want to delete <b>{{ product.name }}</b
-                            >?</span
-                        >
+                        <span v-if="product">Are you sure you want to delete <b>{{ product.name }}</b>?</span>
                     </div>
                     <template #footer>
                         <Button label="No" icon="pi pi-times" text @click="deleteProductDialog = false" />
@@ -280,7 +255,7 @@ const initFilters = () => {
                 <Dialog v-model:visible="deleteProductsDialog" :style="{ width: '450px' }" header="Confirm" :modal="true">
                     <div class="flex align-items-center justify-content-center">
                         <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
-                        <span v-if="product">Are you sure you want to delete the selected products?</span>
+                        <span v-if="selectedProducts.length">Are you sure you want to delete the selected types?</span>
                     </div>
                     <template #footer>
                         <Button label="No" icon="pi pi-times" text @click="deleteProductsDialog = false" />

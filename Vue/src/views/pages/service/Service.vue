@@ -263,6 +263,8 @@ const getCategoryName = (categoryId: number) => {
                     <Column headerStyle="min-width:10rem;">
                         <template #body="slotProps">
                             <Button icon="pi pi-pencil" class="mr-2" severity="success" rounded @click="editProduct(slotProps.data)" />
+                            <RouterLink :to="`/items/service/${slotProps.data.id}/hotels`"><Button icon="pi pi-building" class="mr-2" rounded/></RouterLink>
+                            <RouterLink :to="`/items/service/${slotProps.data.id}/guests`"><Button icon="pi pi-users" class="mr-2" rounded/></RouterLink>
                             <Button icon="pi pi-trash" class="mt-2" severity="warning" rounded @click="confirmDeleteProduct(slotProps.data)" />
                         </template>
                     </Column>

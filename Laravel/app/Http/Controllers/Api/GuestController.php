@@ -8,6 +8,7 @@ use App\Http\Requests\Guest\StoreRequest;
 use App\Http\Requests\ManyToMany\GuestService\StoreServiceRequest;
 use App\Http\Requests\ManyToMany\RoomGuest\StoreRoomRequest;
 use App\Models\Guest;
+use Illuminate\Support\Facades\DB;
 
 /**
  * @OA\Tag(
@@ -210,12 +211,12 @@ class GuestController extends Controller
 
     /**
      * @OA\Get(
-     *    path="/api/guest/{id}/rooms",
+     *    path="/api/guest/{guestId}/rooms",
      *    summary="Get rooms of a specific guest",
      *    tags={"Guest"},
      *    description="Get rooms of a specific guest by ID",
      *    @OA\Parameter(
-     *        name="id",
+     *        name="guestId",
      *        in="path",
      *        required=true,
      *        description="ID of the guest",
@@ -226,7 +227,16 @@ class GuestController extends Controller
      *    ),
      *    @OA\Response(
      *        response=200,
-     *        description="Successful operation",
+     *         description="Successful response",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(
+     *                 @OA\Property(property="id", type="integer", example=1),
+     *                 @OA\Property(property="number", type="number", example="1"),
+     *                 @OA\Property(property="checkInDate", type="string", format="date", example="2024-07-30"),
+     *                 @OA\Property(property="checkOutDate", type="string", format="date", example="2024-08-01")
+     *             )
+     *         )
      *    ),
      *    @OA\Response(
      *        response=404,
@@ -234,10 +244,18 @@ class GuestController extends Controller
      *    )
      * )
      */
-    public function getRooms($id)
+    public function getRooms($guestId)
     {
-        $guest = Guest::findOrFail($id);
-        return response()->json($guest->rooms, 200);
+        // $guest = Guest::findOrFail($id);
+        // return response()->json($guest->rooms, 200);
+
+        $rooms = DB::table('room_guests')
+            ->join('rooms', 'room_guests.room_id', '=', 'rooms.id')
+            ->where('room_guests.guest_id', $guestId)
+            ->select('rooms.id', 'rooms.number', 'room_guests.checkInDate', 'room_guests.checkOutDate')
+            ->get();
+
+        return response()->json($rooms);
     }
 
     /**
@@ -281,51 +299,108 @@ class GuestController extends Controller
         return app(RoomGuestController::class)->storeRooms($guest, $request);
     }
 
+    // /**
+    //  * @OA\Delete(
+    //  *    path="/api/guest/{guest}/rooms",
+    //  *    summary="Remove rooms from a specific guest",
+    //  *    tags={"Guest"},
+    //  *    description="Remove rooms from a specific guest by ID",
+    //  *    @OA\Parameter(
+    //  *        name="guest",
+    //  *        in="path",
+    //  *        required=true,
+    //  *        description="ID of the guest",
+    //  *        @OA\Schema(
+    //  *            type="integer",
+    //  *            format="int64"
+    //  *        )
+    //  *    ),
+    //  *    @OA\RequestBody(
+    //  *       required=true,
+    //  *       @OA\JsonContent(
+    //  *           required={"guest_id", "room_id", "checkInDate", "checkOutDate"},
+    //  *           @OA\Property(property="guest_id", type="integer", example=1),
+    //  *           @OA\Property(property="room_id", type="array", @OA\Items(type="integer", example=1)),
+    //  *           @OA\Property(property="checkInDate", type="string", format="date", example="2021-10-01"),
+    //  *           @OA\Property(property="checkOutDate", type="string", format="date", example="2021-10-10"),
+    //  *       )
+    //  *    ),
+    //  *    @OA\Response(
+    //  *        response=200,
+    //  *        description="rooms removed successfully",
+    //  *    ),
+    //  *    @OA\Response(
+    //  *        response=404,
+    //  *        description="Guest not found"
+    //  *    )
+    //  * )
+    //  */
+    // public function removeRooms(Guest $guest, StoreRoomRequest $request)
+    // {
+    //     $roomIds = $request->validated()['room_id'] ?? [];
+    //     $guest->rooms()->detach($roomIds, [
+    //         'checkInDate' => $request->validated()['checkInDate'],
+    //         'checkOutDate' => $request->validated()['checkOutDate'],
+    //     ]);
+    //     return response()->json($guest->rooms, 200);
+    // }
+
     /**
-     * @OA\Delete(
-     *    path="/api/guest/{guest}/rooms",
-     *    summary="Remove rooms from a specific guest",
-     *    tags={"Guest"},
-     *    description="Remove rooms from a specific guest by ID",
-     *    @OA\Parameter(
-     *        name="guest",
-     *        in="path",
-     *        required=true,
-     *        description="ID of the guest",
-     *        @OA\Schema(
-     *            type="integer",
-     *            format="int64"
-     *        )
-     *    ),
-     *    @OA\RequestBody(
-     *       required=true,
-     *       @OA\JsonContent(
-     *           required={"guest_id", "room_id", "checkInDate", "checkOutDate"},
-     *           @OA\Property(property="guest_id", type="integer", example=1),
-     *           @OA\Property(property="room_id", type="array", @OA\Items(type="integer", example=1)),
-     *           @OA\Property(property="checkInDate", type="string", format="date", example="2021-10-01"),
-     *           @OA\Property(property="checkOutDate", type="string", format="date", example="2021-10-10"),
-     *       )
-     *    ),
-     *    @OA\Response(
-     *        response=200,
-     *        description="rooms removed successfully",
-     *    ),
-     *    @OA\Response(
-     *        response=404,
-     *        description="Guest not found"
-     *    )
-     * )
-     */
-    public function removeRooms(Guest $guest, StoreRoomRequest $request)
-    {
-        $roomIds = $request->validated()['room_id'] ?? [];
-        $guest->rooms()->detach($roomIds, [
-            'checkInDate' => $request->validated()['checkInDate'],
-            'checkOutDate' => $request->validated()['checkOutDate'],
-        ]);
-        return response()->json($guest->rooms, 200);
+ * @OA\Delete(
+ *    path="/api/guest/{guestId}/rooms",
+ *    summary="Remove rooms from a guest",
+ *    tags={"Guest"},
+ *    description="Remove rooms from a specific guest by ID and matching dates",
+ *    @OA\Parameter(
+ *        name="guestId",
+ *        in="path",
+ *        required=true,
+ *        description="ID of the guest",
+ *        @OA\Schema(
+ *            type="integer",
+ *            format="int64"
+ *        )
+ *    ),
+ *    @OA\RequestBody(
+ *       required=true,
+ *       @OA\JsonContent(
+ *           required={"guest_id", "room_id", "checkInDate", "checkOutDate"},
+ *           @OA\Property(property="guest_id", type="integer", example=1),
+ *           @OA\Property(property="room_id", type="array", @OA\Items(type="integer", example=1)),
+ *           @OA\Property(property="checkInDate", type="string", format="date", example="2021-10-01"),
+ *           @OA\Property(property="checkOutDate", type="string", format="date", example="2021-10-10"),
+ *       )
+ *    ),
+ *    @OA\Response(
+ *        response=200,
+ *        description="Rooms removed successfully",
+ *    ),
+ *    @OA\Response(
+ *        response=404,
+ *        description="Guest not found"
+ *    )
+ * )
+ */
+public function removeRooms(Guest $guest, StoreRoomRequest $request)
+{
+    $roomIds = $request->input('room_id', []);
+    $checkInDate = $request->input('checkInDate');
+    $checkOutDate = $request->input('checkOutDate');
+
+    if (empty($roomIds) || !$checkInDate || !$checkOutDate) {
+        return response()->json(['message' => 'Invalid input'], 400);
     }
+
+    foreach ($roomIds as $roomId) {
+        $guest->rooms()->wherePivot('room_id', $roomId)
+            ->wherePivot('checkInDate', $checkInDate)
+            ->wherePivot('checkOutDate', $checkOutDate)
+            ->detach();
+    }
+
+    return response()->json($guest->rooms, 200);
+}
+
 
     /**
      * @OA\Get(

@@ -14,32 +14,68 @@ const router = createRouter({
                     component: () => import('@/views/Dashboard.vue')
                 },
                 {
-                    path: '/items/hotels',
+                    path: '/items/hotel',
                     name: 'hotels',
-                    component: () => import('@/views/pages/hotel/Hotel.vue')
+                    component: () => import('@/views/pages/hotel/Hotel.vue'),
                 },
                 {
-                    path: '/items/guests',
+                    path: '/items/hotel/:id/services',
+                    name: 'hotelServices',
+                    component: () => import('@/views/pages/hotel/HotelServices.vue'),
+                    props: true
+                },
+                {
+                    path: '/items/guest',
                     name: 'guests',
                     component: () => import('@/views/pages/guest/Guest.vue')
                 },
                 {
-                    path: '/items/rooms',
+                    path: '/items/guest/:id/services',
+                    name: 'guestServices',
+                    component: () => import('@/views/pages/guest/GuestServices.vue'),
+                    props: true
+                },
+                {
+                    path: '/items/guest/:id/rooms',
+                    name: 'guestRooms',
+                    component: () => import('@/views/pages/guest/GuestRooms.vue'),
+                    props: true
+                },
+                {
+                    path: '/items/room',
                     name: 'rooms',
                     component: () => import('@/views/pages/room/Room.vue')
                 },
                 {
-                    path: '/items/types',
+                    path: '/items/room/:id/guests',
+                    name: 'roomGuests',
+                    component: () => import('@/views/pages/room/RoomGuests.vue'),
+                    props: true
+                },
+                {
+                    path: '/items/type',
                     name: 'types',
                     component: () => import('@/views/pages/type/Type.vue')
                 },
                 {
-                    path: '/items/services',
+                    path: '/items/service',
                     name: 'services',
                     component: () => import('@/views/pages/service/Service.vue')
                 },
                 {
-                    path: '/items/categories',
+                    path: '/items/service/:id/hotels',
+                    name: 'serviceHotels',
+                    component: () => import('@/views/pages/service/ServiceHotels.vue'),
+                    props: true
+                },
+                {
+                    path: '/items/service/:id/guests',
+                    name: 'serviceGuests',
+                    component: () => import('@/views/pages/service/ServiceGuests.vue'),
+                    props: true
+                },
+                {
+                    path: '/items/category',
                     name: 'categories',
                     component: () => import('@/views/pages/category/Category.vue')
                 },

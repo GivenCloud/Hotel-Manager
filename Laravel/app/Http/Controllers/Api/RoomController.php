@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\ManyToMany\RoomGuest\StoreGuestRequest;
 use App\Http\Requests\Room\StoreRequest;
 use App\Models\Room;
+use Illuminate\Support\Facades\DB;
 
 /**
  * @OA\Tag(
@@ -281,9 +282,18 @@ class RoomController extends Controller
      *            format="int64"
      *        )
      *    ),
-     *    @OA\Response(
+     *   @OA\Response(
      *        response=200,
-     *        description="Successful operation",
+     *         description="Successful response",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(
+     *                 @OA\Property(property="id", type="integer", example=1),
+     *                 @OA\Property(property="name", type="string", example="1"),
+     *                 @OA\Property(property="checkInDate", type="string", format="date", example="2024-07-30"),
+     *                 @OA\Property(property="checkOutDate", type="string", format="date", example="2024-08-01")
+     *             )
+     *         )
      *    ),
      *    @OA\Response(
      *        response=404,
@@ -291,10 +301,17 @@ class RoomController extends Controller
      *    )
      * )
      */
-    public function getGuests($id)
+    public function getGuests($roomId)
     {
-        $room = Room::findOrFail($id);
-        return response()->json($room->guests, 200);
+        {
+            $guests = DB::table('room_guests')
+                ->join('guests', 'room_guests.guest_id', '=', 'guests.id')
+                ->where('room_guests.room_id', $roomId)
+                ->select('guests.id', 'guests.name', 'room_guests.checkInDate', 'room_guests.checkOutDate')
+                ->get();
+    
+            return response()->json($guests);
+        }
     }
 
     /**
@@ -358,8 +375,8 @@ class RoomController extends Controller
      *       required=true,
      *       @OA\JsonContent(
      *           required={"guest_id", "room_id", "checkInDate", "checkOutDate"},
-     *           @OA\Property(property="guest_id", type="integer", example=1),
-     *           @OA\Property(property="room_id", type="array", @OA\Items(type="integer", example=1)),
+     *           @OA\Property(property="guest_id", type="array", @OA\Items(type="integer", example=1)),
+     *           @OA\Property(property="room_id", type="integer", example=1),
      *           @OA\Property(property="checkInDate", type="string", format="date", example="2021-10-01"),
      *           @OA\Property(property="checkOutDate", type="string", format="date", example="2021-10-10"),
      *       )
@@ -370,17 +387,27 @@ class RoomController extends Controller
      *    ),
      *    @OA\Response(
      *        response=404,
-     *        description="room not found"
+     *        description="Room not found"
      *    )
      * )
      */
     public function removeGuests(Room $room, StoreGuestRequest $request)
     {
-        $guestIds = $request->validated()['guest_id'] ?? [];
-        $room->guests()->detach($guestIds, [
-            'checkInDate' => $request->validated()['checkInDate'],
-            'checkOutDate' => $request->validated()['checkOutDate'],
-        ]);
+        $guestIds = $request->input('guest_id', []);
+        $checkInDate = $request->input('checkInDate');
+        $checkOutDate = $request->input('checkOutDate');
+
+        if (empty($guestIds) || !$checkInDate || !$checkOutDate) {
+            return response()->json(['message' => 'Invalid input'], 400);
+        }
+
+        foreach ($guestIds as $guestId) {
+            $room->guests()->wherePivot('guest_id', $guestId)
+                ->wherePivot('checkInDate', $checkInDate)
+                ->wherePivot('checkOutDate', $checkOutDate)
+                ->detach();
+        }
+
         return response()->json($room->guests, 200);
     }
 }

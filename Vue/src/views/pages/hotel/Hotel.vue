@@ -7,13 +7,12 @@ import { type Hotel } from '@/types/hotel';
 import axios from 'axios';
 
 const toast = useToast();
-
-const products = ref(null);
+const products = ref<Hotel[]>([]);
 const productDialog = ref(false);
 const deleteProductDialog = ref(false);
 const deleteProductsDialog = ref(false);
-const product = ref<Hotel>({ value: null });
-const selectedProducts = ref(null);
+const product = ref<Hotel | null>(null);
+const selectedProducts = ref<Hotel[]>([]);
 const dt = ref(null);
 const filters = ref({});
 const submitted = ref(false);
@@ -23,12 +22,17 @@ const useHotels = new useHotel();
 onBeforeMount(() => {
     initFilters();
 });
-onMounted(() => {
-    useHotels.getHotels().then((data) => (products.value = data));
+
+onMounted(async () => {
+    try {
+        products.value = await useHotels.getHotels();
+    } catch (error) {
+        toast.add({ severity: 'error', summary: 'Error', detail: 'Failed to load hotels', life: 3000 });
+    }
 });
 
 const openNew = () => {
-    product.value = {};
+    product.value = {} as Hotel;
     submitted.value = false;
     productDialog.value = true;
 };
@@ -38,139 +42,48 @@ const hideDialog = () => {
     submitted.value = false;
 };
 
-// const saveProduct = async () => {
-//     submitted.value = true;
-
-//     // Validar campos requeridos
-//     if (!product.value.name || !product.value.address || !product.value.phone || !product.value.email || !product.value.website) {
-//         toast.add({ severity: 'error', summary: 'Error', detail: 'All fields are required', life: 3000 });
-//         return;
-//     }
-
-//     try {
-//         if (product.value.id) {
-//             // Realiza la petición PUT a la API de Laravel para actualizar el hotel
-//             const response = await axios.put(`http://hotel-manager.test/api/hotel/${product.value.id}`, {
-//                 name: product.value.name,
-//                 address: product.value.address,
-//                 phone: product.value.phone,
-//                 email: product.value.email,
-//                 website: product.value.website
-//             });
-
-//             // Actualiza el hotel en la lista local
-//             const index = products.value.findIndex((p:any) => p.id === product.value.id);
-//             if (index !== -1) {
-//                 products.value[index] = response.data;
-//             }
-
-//             // Muestra una notificación de éxito
-//             toast.add({ severity: 'success', summary: 'Successful', detail: 'Hotel Updated', life: 3000 });
-//         } else {
-//             // Realiza la petición POST a la API de Laravel para crear un nuevo hotel
-//             const response = await axios.post('http://hotel-manager.test/api/hotel', {
-//                 name: product.value.name,
-//                 address: product.value.address,
-//                 phone: product.value.phone,
-//                 email: product.value.email,
-//                 website: product.value.website
-//             });
-
-//             // Añade el nuevo hotel a la lista local
-//             products.value.push(response.data);
-
-//             // Muestra una notificación de éxito
-//             toast.add({ severity: 'success', summary: 'Successful', detail: 'Hotel Created', life: 3000 });
-//         }
-
-//         // Cierra el diálogo de creación/edición
-//         productDialog.value = false;
-//         product.value = {};
-//     } catch (error) {
-//         // Maneja errores en la petición PUT o POST
-//         console.error('Error saving hotel:', error);
-//         toast.add({ severity: 'error', summary: 'Error', detail: 'Could not save hotel', life: 3000 });
-//     }
-// };
-
-
 const saveProduct = async () => {
     submitted.value = true;
+    const { name, address, stars, phone, email, website } = product.value || {};
 
-    // Validar campos requeridos
-    if (!product.value.name || !product.value.address || !product.value.stars || !product.value.phone || !product.value.email || !product.value.website) {
+    if (!name || !address || !stars || !phone || !email || !website) {
         toast.add({ severity: 'error', summary: 'Error', detail: 'All fields are required', life: 3000 });
         return;
     }
 
     try {
-        let response;
+        const response = product.value?.id 
+            ? await axios.put(`http://hotel-manager.test/api/hotel/${product.value.id}`, { name, address, stars, phone, email, website })
+            : await axios.post('http://hotel-manager.test/api/hotel', { name, address, stars, phone, email, website });
 
-        if (product.value.id) {
-            // Realiza la petición PUT a la API de Laravel para actualizar el hotel
-            response = await axios.put(`http://hotel-manager.test/api/hotel/${product.value.id}`, {
-                name: product.value.name,
-                address: product.value.address,
-                stars: product.value.stars,
-                phone: product.value.phone,
-                email: product.value.email,
-                website: product.value.website
-            });
+        const newProduct = response.data;
 
-            // Actualiza el hotel en la lista local
-            const index = products.value.findIndex((p:any) => p.id === product.value.id);
-            if (index !== -1) {
-                products.value[index] = response.data;
-            }
-
-            // Muestra una notificación de éxito
+        if (product.value?.id) {
+            const index = products.value.findIndex(p => p.id === product.value.id);
+            if (index !== -1) products.value[index] = newProduct;
             toast.add({ severity: 'success', summary: 'Successful', detail: 'Hotel Updated', life: 3000 });
         } else {
-            // Realiza la petición POST a la API de Laravel para crear un nuevo hotel
-            response = await axios.post('http://hotel-manager.test/api/hotel', {
-                name: product.value.name,
-                address: product.value.address,
-                stars: product.value.stars,
-                phone: product.value.phone,
-                email: product.value.email,
-                website: product.value.website
-            });
-
-            // Añade el nuevo hotel a la lista local
-            products.value.push(response.data);
-
-            // Muestra una notificación de éxito
+            products.value.push(newProduct);
             toast.add({ severity: 'success', summary: 'Successful', detail: 'Hotel Created', life: 3000 });
         }
 
-        // Cierra el diálogo de creación/edición
-        productDialog.value = false;
-        product.value = {};
-
-    } catch (error: unknown) {
-        if ((error as any).response && (error as any).response.data && (error as any).response.data.errors) {
-            // Maneja errores específicos de validación
-            const errors: Record<string, string[]> = (error as any).response.data.errors;
-            let errorMessage = 'Validation errors:';
-
-            // Itera sobre los errores y agrega un mensaje para cada campo
-            for (const [field, messages] of Object.entries(errors)) {
-                messages.forEach((message: string) => {
-                    errorMessage += `\n- ${message}`;
-                });
-            }
-
-            // Muestra las notificaciones de error
-            toast.add({ severity: 'error', summary: 'Validation Error', detail: errorMessage, life: 5000 });
-        } else {
-            // Maneja errores generales
-            toast.add({ severity: 'error', summary: 'Error', detail: 'Could not save hotel', life: 3000 });
-        }
+        hideDialog();
+    } catch (error: any) {
+        handleApiError(error);
     }
 };
 
-
-
+const handleApiError = (error: any) => {
+    if (error.response && error.response.data && error.response.data.errors) {
+        let errorMessage = 'Validation errors:';
+        for (const [field, messages] of Object.entries(error.response.data.errors)) {
+            messages.forEach((message: string) => errorMessage += `\n- ${message}`);
+        }
+        toast.add({ severity: 'error', summary: 'Validation Error', detail: errorMessage, life: 5000 });
+    } else {
+        toast.add({ severity: 'error', summary: 'Error', detail: 'Could not process request', life: 3000 });
+    }
+};
 
 const editProduct = (editProduct: Hotel) => {
     product.value = { ...editProduct };
@@ -182,33 +95,14 @@ const confirmDeleteProduct = (editProduct: Hotel) => {
     deleteProductDialog.value = true;
 };
 
-// const deleteProduct = () => {
-//     products.value = products.value.filter((val: { id: any; }) => val.id !== product.value.id);
-//     deleteProductDialog.value = false;
-//     product.value = {};
-//     toast.add({ severity: 'success', summary: 'Successful', detail: 'Product Deleted', life: 3000 });
-// };
-
 const deleteProduct = async () => {
     try {
-        // Realiza la petición DELETE a la API de Laravel
-        await axios.delete(`http://hotel-manager.test/api/hotel/${product.value.id}`);
-
-        // Filtra el producto eliminado de la lista local
-        products.value = products.value.filter((val: { id: any; }) => val.id !== product.value.id);
-        
-        // Cierra el diálogo de confirmación
+        await axios.delete(`http://hotel-manager.test/api/hotel/${product.value?.id}`);
+        products.value = products.value.filter(p => p.id !== product.value?.id);
         deleteProductDialog.value = false;
-        
-        // Limpia el producto seleccionado
-        product.value = {};
-        
-        // Muestra una notificación de éxito
         toast.add({ severity: 'success', summary: 'Successful', detail: 'Hotel Deleted', life: 3000 });
     } catch (error) {
-        // Maneja errores en la petición DELETE
-        console.error('Error deleting hotel:', error);
-        toast.add({ severity: 'error', summary: 'Error', detail: 'Could not delete hotel', life: 3000 });
+        handleApiError(error);
     }
 };
 
@@ -216,61 +110,17 @@ const confirmDeleteSelected = () => {
     deleteProductsDialog.value = true;
 };
 
-// const deleteSelectedProducts = () => {
-//     products.value = products.value.filter((val:any) => !selectedProducts.value.includes(val));
-//     deleteProductsDialog.value = false;
-//     selectedProducts.value = null;
-//     toast.add({ severity: 'success', summary: 'Successful', detail: 'Products Deleted', life: 3000 });
-// };
-
-// const deleteSelectedProducts = async () => {
-//     try {
-//         // Realiza una petición DELETE para cada hotel seleccionado
-//         for (const hotel of selectedProducts.value) {
-//             await axios.delete(`http://hotel-manager.test/api/hotel/${hotel.id}`);
-//         }
-
-//         // Filtra los hoteles locales eliminando los seleccionados
-//         products.value = products.value.filter((val:any) => !selectedProducts.value.includes(val));
-        
-//         // Cierra el diálogo de eliminación
-//         deleteProductsDialog.value = false;
-//         selectedProducts.value = null;
-
-//         // Muestra una notificación de éxito
-//         toast.add({ severity: 'success', summary: 'Successful', detail: 'Hotels Deleted', life: 3000 });
-//     } catch (error) {
-//         // Maneja errores en la petición DELETE
-//         console.error('Error deleting hotels:', error);
-//         toast.add({ severity: 'error', summary: 'Error', detail: 'Could not delete hotels', life: 3000 });
-//     }
-// };
-
-
 const deleteSelectedProducts = async () => {
     try {
-        // Realiza todas las peticiones DELETE concurrentemente
-        await Promise.all(selectedProducts.value.map((hotel: Hotel) => 
-            axios.delete(`http://hotel-manager.test/api/hotel/${hotel.id}`)
-        ));
-
-        // Filtra los hoteles locales eliminando los seleccionados
-        products.value = products.value.filter((val:any) => !selectedProducts.value.includes(val));
-        
-        // Cierra el diálogo de eliminación
+        await Promise.all(selectedProducts.value.map(hotel => axios.delete(`http://hotel-manager.test/api/hotel/${hotel.id}`)));
+        products.value = products.value.filter(p => !selectedProducts.value.some(selected => selected.id === p.id));
         deleteProductsDialog.value = false;
-        selectedProducts.value = null;
-
-        // Muestra una notificación de éxito
+        selectedProducts.value = [];
         toast.add({ severity: 'success', summary: 'Successful', detail: 'Hotels Deleted', life: 3000 });
     } catch (error) {
-        // Maneja errores en la petición DELETE
-        console.error('Error deleting hotels:', error);
-        toast.add({ severity: 'error', summary: 'Error', detail: 'Could not delete hotels', life: 3000 });
+        handleApiError(error);
     }
 };
-
-
 
 const initFilters = () => {
     filters.value = {
@@ -278,6 +128,7 @@ const initFilters = () => {
     };
 };
 </script>
+
 
 <template>
     <div class="grid">
@@ -354,43 +205,11 @@ const initFilters = () => {
                     <Column headerStyle="min-width:10rem;">
                         <template #body="slotProps">
                             <Button icon="pi pi-pencil" class="mr-2" severity="success" rounded @click="editProduct(slotProps.data)" />
+                            <RouterLink :to="`/items/hotel/${slotProps.data.id}/services`"><Button icon="pi pi-table" class="mr-2" rounded/></RouterLink>
                             <Button icon="pi pi-trash" class="mt-2" severity="warning" rounded @click="confirmDeleteProduct(slotProps.data)" />
                         </template>
                     </Column>
                 </DataTable>
-
-                <!-- <Dialog v-model:visible="productDialog" :style="{ width: '450px' }" header="Product Details" :modal="true" class="p-fluid">
-                    <img :src="'/demo/images/product/' + product.image" :alt="product.image" v-if="product.image" width="150" class="mt-0 mx-auto mb-5 block shadow-2" />
-                    <div class="field">
-                        <label for="name">Name</label>
-                        <InputText id="name" v-model.trim="product.name" required="true" autofocus :invalid="submitted && !product.name" />
-                        <small class="p-invalid" v-if="submitted && !product.name">Name is required.</small>
-                    </div>
-                    <div class="field">
-                        <label for="address">Address</label>
-                        <InputText id="address" v-model.trim="product.address" required="true" autofocus :invalid="submitted && !product.address" />
-                        <small class="p-invalid" v-if="submitted && !product.address">Address is required.</small>
-                    </div>
-                    <div class="field">
-                        <label for="phone">Phone</label>
-                        <InputText id="phone" v-model.trim="product.phone" required="true" autofocus :invalid="submitted && !product.phone" />
-                        <small class="p-invalid" v-if="submitted && !product.phone">Phone is required.</small>
-                    </div>
-                    <div class="field">
-                        <label for="email">Email</label>
-                        <InputText id="email" v-model.trim="product.email" required="true" autofocus :invalid="submitted && !product.email" />
-                        <small class="p-invalid" v-if="submitted && !product.email">Email is required.</small>
-                    </div>
-                    <div class="field">
-                        <label for="website">Website</label>
-                        <InputText id="website" v-model.trim="product.website" required="true" autofocus :invalid="submitted && !product.website" />
-                        <small class="p-invalid" v-if="submitted && !product.website">Website is required.</small>
-                    </div>
-                    <template #footer>
-                        <Button label="Cancel" icon="pi pi-times" text="" @click="hideDialog" />
-                        <Button label="Save" icon="pi pi-check" text="" @click="saveProduct" />
-                    </template>
-                </Dialog> -->
 
                 <Dialog v-model:visible="productDialog" :style="{ width: '450px' }" header="Product Details" :modal="true" class="p-fluid">
                     <img :src="'/demo/images/product/' + product.image" :alt="product.image" v-if="product.image" width="150" class="mt-0 mx-auto mb-5 block shadow-2" />

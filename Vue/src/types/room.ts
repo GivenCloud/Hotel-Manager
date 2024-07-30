@@ -6,3 +6,4 @@ export interface Room {
     created_at: Date;
     updated_at: Date;
 }
+  

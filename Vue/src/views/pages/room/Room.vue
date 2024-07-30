@@ -246,7 +246,7 @@ const getTypeName = (typeId: number) => {
                 <DataTable
                     ref="dt"
                     :value="products"
-                    v-model="selectedProducts"
+                    v-model:selection="selectedProducts"
                     dataKey="id"
                     :paginator="true"
                     :rows="10"
@@ -287,12 +287,13 @@ const getTypeName = (typeId: number) => {
                     <Column headerStyle="min-width:10rem;">
                         <template #body="slotProps">
                             <Button icon="pi pi-pencil" class="mr-2" severity="success" rounded @click="editProduct(slotProps.data)" />
+                            <RouterLink :to="`/items/room/${slotProps.data.id}/guests`"><Button icon="pi pi-users" class="mr-2" rounded/></RouterLink>
                             <Button icon="pi pi-trash" class="mt-2" severity="warning" rounded @click="confirmDeleteProduct(slotProps.data)" />
                         </template>
                     </Column>
                 </DataTable>
 
-                <Dialog v-model="productDialog" :style="{ width: '450px' }" header="Product Details" :modal="true" class="p-fluid">
+                <Dialog v-model:visible="productDialog" :style="{ width: '450px' }" header="Product Details" :modal="true" class="p-fluid">
                     <img :src="'/demo/images/product/' + product.image" :alt="product.image" v-if="product.image" width="150" class="mt-0 mx-auto mb-5 block shadow-2" />
                     <div class="field">
                         <label for="number">Number</label>
@@ -340,7 +341,7 @@ const getTypeName = (typeId: number) => {
                     </template>
                 </Dialog>
 
-                <Dialog v-model="deleteProductDialog" :style="{ width: '450px' }" header="Confirm" :modal="true">
+                <Dialog v-model:visible="deleteProductDialog" :style="{ width: '450px' }" header="Confirm" :modal="true">
                     <div class="flex align-items-center justify-content-center">
                         <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
                         <span v-if="product">Are you sure you want to delete <b>{{ product.number }}</b>?</span>
@@ -351,7 +352,7 @@ const getTypeName = (typeId: number) => {
                     </template>
                 </Dialog>
 
-                <Dialog v-model="deleteProductsDialog" :style="{ width: '450px' }" header="Confirm" :modal="true">
+                <Dialog v-model:visible="deleteProductsDialog" :style="{ width: '450px' }" header="Confirm" :modal="true">
                     <div class="flex align-items-center justify-content-center">
                         <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
                         <span v-if="product">Are you sure you want to delete the selected products?</span>

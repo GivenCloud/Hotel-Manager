@@ -249,6 +249,8 @@ const initFilters = () => {
                     <Column headerStyle="min-width:10rem;">
                         <template #body="slotProps">
                             <Button icon="pi pi-pencil" class="mr-2" severity="success" rounded @click="editProduct(slotProps.data)" />
+                            <RouterLink :to="`/items/guest/${slotProps.data.id}/services`"><Button icon="pi pi-table" class="mr-2" rounded/></RouterLink>
+                            <RouterLink :to="`/items/guest/${slotProps.data.id}/rooms`"><Button icon="pi pi-box" class="mr-2" rounded/></RouterLink>
                             <Button icon="pi pi-trash" class="mt-2" severity="warning" rounded @click="confirmDeleteProduct(slotProps.data)" />
                         </template>
                     </Column>
@@ -264,12 +266,12 @@ const initFilters = () => {
                     <div class="field">
                         <label for="lastName">LastName</label>
                         <InputText id="lastName" v-model.trim="product.lastName" required="true" autofocus :invalid="submitted && !product.lastName" />
-                        <small class="p-invalid" v-if="submitted && !product.lastname">LastName is required.</small>
+                        <small class="p-invalid" v-if="submitted && !product.lastName">LastName is required.</small>
                     </div>
                     <div class="field">
                         <label for="dniPassport">DniPassport</label>
                         <InputText id="dniPassport" v-model.trim="product.dniPassport" required="true" autofocus :invalid="submitted && !product.dniPassport" />
-                        <small class="p-invalid" v-if="submitted && !product.dnipassport">DniPassport is required.</small>
+                        <small class="p-invalid" v-if="submitted && !product.dniPassport">DniPassport is required.</small>
                     </div>
                     <div class="field">
                         <label for="email">Email</label>

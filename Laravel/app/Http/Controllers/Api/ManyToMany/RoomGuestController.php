@@ -35,6 +35,132 @@ class RoomGuestController extends Controller
         return response()->json(RoomGuest::get(), 200);
     }
 
+// /**
+//  * @OA\Post(
+//  *     path="/api/room-guests/{guest}/add-rooms",
+//  *     tags={"RoomGuest"},
+//  *     summary="Add rooms to a guest",
+//  *     description="Add rooms to a guest", 
+//  *     @OA\Parameter(
+//  *        name="guest",
+//  *        in="path",
+//  *        required=true,
+//  *        description="ID of the guest",
+//  *        @OA\Schema(
+//  *            type="integer",
+//  *            format="int64"
+//  *        )
+//  *     ),
+//  *     @OA\RequestBody(
+//  *         required=true,
+//  *         @OA\JsonContent(
+//  *           required={"guest_id", "room_id", "checkInDate", "checkOutDate"},
+//  *           @OA\Property(property="guest_id", type="integer", example=1),
+//  *           @OA\Property(property="room_id", type="array", @OA\Items(type="integer", example=1)),
+//  *           @OA\Property(property="checkInDate", type="string", format="date", example="2021-10-01"),
+//  *           @OA\Property(property="checkOutDate", type="string", format="date", example="2021-10-10"),
+//  *       )
+//  *     ),
+//  *     @OA\Response(
+//  *         response=200,
+//  *         description="Successful operation"
+//  *     )
+//  * )
+//  */
+// public function storeRooms(Guest $guest, StoreRoomRequest $request, $update = false)
+// {
+//     $roomIds = $request->validated()['room_id'] ?? [];
+
+//     // Si estamos en modo actualización, eliminamos todas las habitaciones actuales
+//     if ($update) {
+//         $guest->rooms()->detach();
+//     }
+
+//     foreach ($roomIds as $roomId) {
+//         $room = Room::findOrFail($roomId);
+//         $room->guests()->attach($guest->id, [
+//             'checkInDate' => $request->validated()['checkInDate'],
+//             'checkOutDate' => $request->validated()['checkOutDate'],
+//         ]);
+//     }
+
+//     // Devolver la respuesta con un código de estado 200 si no hay errores
+//     return response()->json($guest->rooms, 200);
+// }
+
+//     /**
+//      * @OA\Post(
+//      *     path="/api/room-guests/{room}/add-guests",
+//      *     tags={"RoomGuest"},
+//      *     summary="Add guests to a room",
+//      *     description="Add guests to a room",
+//      *     @OA\Parameter(
+//      *        name="room",
+//      *        in="path",
+//      *        required=true,
+//      *        description="ID of the room",
+//      *        @OA\Schema(
+//      *            type="integer",
+//      *            format="int64"
+//      *        )
+//      *    ),
+//      *     @OA\RequestBody(
+//      *         required=true,
+//      *         @OA\JsonContent(
+//      *           required={"guest_id", "room_id", "checkInDate", "checkOutDate"},
+//      *           @OA\Property(property="room_id", type="integer", example=1),
+//      *           @OA\Property(property="guest_id", type="array", @OA\Items(type="integer", example=1)),
+//      *           @OA\Property(property="checkInDate", type="string", format="date", example="2021-10-01"),
+//      *           @OA\Property(property="checkOutDate", type="string", format="date", example="2021-10-10"),
+//      *       )
+//      *     ),
+//      *     @OA\Response(
+//      *         response=200,
+//      *         description="Successful operation"
+//      *     )
+//      * )
+//      */
+//     public function storeGuests(Room $room, StoreGuestRequest $request, $update = false)
+//     {
+//         // Obtener los IDs de los huéspedes a añadir
+//         $guestIds = $request->validated()['guest_id'] ?? [];
+//         $capacity = $room->type->capacity;
+//         $errors = []; // Array para acumular los mensajes de error
+
+//         // Si estamos en modo actualización, eliminamos todos los huéspedes actuales
+//         if ($update) {
+//             $room->guests()->detach();
+//         }
+
+//         foreach ($guestIds as $guestId) {
+//            if ($room->guests()->count() >= $capacity) {
+//                // Agregar el mensaje de error al array de errores
+//                $errors[] = 'Could not add more guest to room ' . $room->id . ' because is full';
+//                break; // Romper el bucle si la habitación está llena
+//             } else {
+//                // Añadir el huésped a la habitación
+//                $room->guests()->attach($guestId, [
+//                   'checkInDate' => $request->validated()['checkInDate'],
+//                   'checkOutDate' => $request->validated()['checkOutDate'],
+//                 ]);
+//             }
+//         }
+
+//         // Construir la respuesta
+//         $response = [
+//             'roomGuests' => $room->guests,
+//         ];
+
+//         if (!empty($errors)) {
+//             $response['errors'] = $errors;
+//             // Devolver la respuesta con un código de estado 400 si hay errores
+//             return response()->json($response, 400);
+//         }
+
+//         // Devolver la respuesta con un código de estado 200 si no hay errores
+//         return response()->json($response, 200);
+//     }
+
 /**
  * @OA\Post(
  *     path="/api/room-guests/{guest}/add-rooms",
@@ -70,105 +196,139 @@ class RoomGuestController extends Controller
 public function storeRooms(Guest $guest, StoreRoomRequest $request, $update = false)
 {
     $roomIds = $request->validated()['room_id'] ?? [];
+    $checkInDate = $request->validated()['checkInDate'];
+    $checkOutDate = $request->validated()['checkOutDate'];
+    $errors = []; // Array to accumulate error messages
 
-    // Si estamos en modo actualización, eliminamos todas las habitaciones actuales
     if ($update) {
         $guest->rooms()->detach();
     }
 
     foreach ($roomIds as $roomId) {
         $room = Room::findOrFail($roomId);
-        $room->guests()->attach($guest->id, [
-            'checkInDate' => $request->validated()['checkInDate'],
-            'checkOutDate' => $request->validated()['checkOutDate'],
-        ]);
+
+        // Verificar solapamientos de fechas
+        $overlap = $room->guests()
+            ->where('guest_id', $guest->id)
+            ->where(function ($query) use ($checkInDate, $checkOutDate) {
+                $query->whereBetween('checkInDate', [$checkInDate, $checkOutDate])
+                      ->orWhereBetween('checkOutDate', [$checkInDate, $checkOutDate])
+                      ->orWhere(function ($query) use ($checkInDate, $checkOutDate) {
+                          $query->where('checkInDate', '<=', $checkInDate)
+                                ->where('checkOutDate', '>=', $checkOutDate);
+                      });
+            })
+            ->exists();
+
+        if ($overlap) {
+            $errors['overlap'][] = "The dates overlap with an existing booking for room $roomId.";
+        } else {
+            $room->guests()->attach($guest->id, [
+                'checkInDate' => $checkInDate,
+                'checkOutDate' => $checkOutDate,
+            ]);
+        }
     }
 
-    // Devolver la respuesta con un código de estado 200 si no hay errores
+    if (!empty($errors)) {
+        return response()->json(['errors' => $errors], 400);
+    }
+
     return response()->json($guest->rooms, 200);
 }
 
-    /**
-     * @OA\Post(
-     *     path="/api/room-guests/{room}/add-guests",
-     *     tags={"RoomGuest"},
-     *     summary="Add guests to a room",
-     *     description="Add guests to a room",
-     *     @OA\Parameter(
-     *        name="room",
-     *        in="path",
-     *        required=true,
-     *        description="ID of the room",
-     *        @OA\Schema(
-     *            type="integer",
-     *            format="int64"
-     *        )
-     *    ),
-     *     @OA\RequestBody(
-     *         required=true,
-     *         @OA\JsonContent(
-     *           required={"guest_id", "room_id", "checkInDate", "checkOutDate"},
-     *           @OA\Property(property="room_id", type="integer", example=1),
-     *           @OA\Property(property="guest_id", type="array", @OA\Items(type="integer", example=1)),
-     *           @OA\Property(property="checkInDate", type="string", format="date", example="2021-10-01"),
-     *           @OA\Property(property="checkOutDate", type="string", format="date", example="2021-10-10"),
-     *       )
-     *     ),
-     *     @OA\Response(
-     *         response=200,
-     *         description="Successful operation"
-     *     )
-     * )
-     */
-    public function storeGuests(Room $room, StoreGuestRequest $request, $update = false)
-    {
-        // Obtener los IDs de los huéspedes a añadir
-        $guestIds = $request->validated()['guest_id'] ?? [];
-        $capacity = $room->type->capacity;
-        $errors = []; // Array para acumular los mensajes de error
+/**
+ * @OA\Post(
+ *     path="/api/room-guests/{room}/add-guests",
+ *     tags={"RoomGuest"},
+ *     summary="Add guests to a room",
+ *     description="Add guests to a room",
+ *     @OA\Parameter(
+ *        name="room",
+ *        in="path",
+ *        required=true,
+ *        description="ID of the room",
+ *        @OA\Schema(
+ *            type="integer",
+ *            format="int64"
+ *        )
+ *    ),
+ *     @OA\RequestBody(
+ *         required=true,
+ *         @OA\JsonContent(
+ *           required={"guest_id", "room_id", "checkInDate", "checkOutDate"},
+ *           @OA\Property(property="room_id", type="integer", example=1),
+ *           @OA\Property(property="guest_id", type="array", @OA\Items(type="integer", example=1)),
+ *           @OA\Property(property="checkInDate", type="string", format="date", example="2021-10-01"),
+ *           @OA\Property(property="checkOutDate", type="string", format="date", example="2021-10-10"),
+ *       )
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Successful operation"
+ *     )
+ * )
+ */
+public function storeGuests(Room $room, StoreGuestRequest $request, $update = false)
+{
+    $guestIds = $request->validated()['guest_id'] ?? [];
+    $checkInDate = $request->validated()['checkInDate'];
+    $checkOutDate = $request->validated()['checkOutDate'];
+    $errors = []; // Array to accumulate error messages
 
-        // Si estamos en modo actualización, eliminamos todos los huéspedes actuales
-        if ($update) {
-            $room->guests()->detach();
-        }
-
-        foreach ($guestIds as $guestId) {
-           if ($room->guests()->count() >= $capacity) {
-               // Agregar el mensaje de error al array de errores
-               $errors[] = 'Could not add more guest to room ' . $room->id . ' because is full';
-               break; // Romper el bucle si la habitación está llena
-            } else {
-               // Añadir el huésped a la habitación
-               $room->guests()->attach($guestId, [
-                  'checkInDate' => $request->validated()['checkInDate'],
-                  'checkOutDate' => $request->validated()['checkOutDate'],
-                ]);
-            }
-        }
-
-        // Construir la respuesta
-        $response = [
-            'roomGuests' => $room->guests,
-        ];
-
-        if (!empty($errors)) {
-            $response['errors'] = $errors;
-            // Devolver la respuesta con un código de estado 400 si hay errores
-            return response()->json($response, 400);
-        }
-
-        // Devolver la respuesta con un código de estado 200 si no hay errores
-        return response()->json($response, 200);
+    if ($update) {
+        $room->guests()->detach();
     }
 
+    foreach ($guestIds as $guestId) {
+        // Verificar capacidad
+        $capacity = $room->type->capacity;
+        if ($room->guests()->count() >= $capacity) {
+            $errors[] = 'Could not add more guests to room ' . $room->id . ' because it is full';
+            break;
+        }
+
+        // Verificar solapamientos de fechas
+        $overlap = $room->guests()
+            ->where('guest_id', $guestId)
+            ->where(function ($query) use ($checkInDate, $checkOutDate) {
+                $query->whereBetween('checkInDate', [$checkInDate, $checkOutDate])
+                      ->orWhereBetween('checkOutDate', [$checkInDate, $checkOutDate])
+                      ->orWhere(function ($query) use ($checkInDate, $checkOutDate) {
+                          $query->where('checkInDate', '<=', $checkInDate)
+                                ->where('checkOutDate', '>=', $checkOutDate);
+                      });
+            })
+            ->exists();
+        
+        if ($overlap) {
+            $errors['overlap'][] = "The dates overlap with an existing booking for guest " . Guest::find($guestId)->name;
+        } else {
+            $room->guests()->attach($guestId, [
+            'checkInDate' => $checkInDate,
+            'checkOutDate' => $checkOutDate,
+            ]);
+        }
+    }
+
+    $response = ['roomGuests' => $room->guests];
+
+    if (!empty($errors)) {
+        $response['errors'] = $errors;
+        return response()->json($response, 400);
+    }
+
+    return response()->json($response, 200);
+}
+    
 /**
  * Display the specified room-guest.
  *
  * @OA\Get(
- *    path="/api/room-guest/{id}",
+ *    path="/api/room-guest/book",
  *    tags={"RoomGuest"},
  *    summary="Get a specific room-guest",
- *    description="Retrieve a specific roomguest by ID",
+ *    description="Retrieve a specific room-guest by ID",
  *    @OA\Parameter(
  *        name="id",
  *        in="path",
@@ -189,11 +349,11 @@ public function storeRooms(Guest $guest, StoreRoomRequest $request, $update = fa
  *    )
  * )
  */
-    public function show($id)
-    {
-        $roomguest = RoomGuest::findOrFail($id);
-        return response()->json($roomguest, 200);
-    }
+public function show($id)
+{
+    $roomguest = RoomGuest::findOrFail($id);
+    return response()->json($roomguest, 200);
+}
 
     /**
      * @OA\Put(
