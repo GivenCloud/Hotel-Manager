@@ -325,7 +325,7 @@ public function storeGuests(Room $room, StoreGuestRequest $request, $update = fa
  * Display the specified room-guest.
  *
  * @OA\Get(
- *    path="/api/room-guest/book",
+ *    path="/api/room-guest/{id}",
  *    tags={"RoomGuest"},
  *    summary="Get a specific room-guest",
  *    description="Retrieve a specific room-guest by ID",

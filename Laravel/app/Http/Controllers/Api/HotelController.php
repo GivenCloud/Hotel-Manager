@@ -279,12 +279,12 @@ class HotelController extends Controller
 
     /**
      * @OA\Post(
-     *    path="/api/hotel/{hotel}/services",
+     *    path="/api/hotel/{id}/services",
      *    summary="Add services to a specific hotel",
      *    tags={"Hotel"},
      *    description="Add services to a specific hotel by ID",
      *    @OA\Parameter(
-     *        name="hotel",
+     *        name="id",
      *        in="path",
      *        required=true,
      *        description="ID of the hotel",
@@ -320,12 +320,12 @@ class HotelController extends Controller
 
     /**
      * @OA\Delete(
-     *    path="/api/hotel/{hotel}/services",
+     *    path="/api/hotel/{id}/services",
      *    summary="Remove services from a specific hotel",
      *    tags={"Hotel"},
      *    description="Remove services from a specific hotel by ID",
      *    @OA\Parameter(
-     *        name="hotel",
+     *        name="id",
      *        in="path",
      *        required=true,
      *        description="ID of the hotel",

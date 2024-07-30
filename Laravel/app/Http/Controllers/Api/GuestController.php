@@ -211,12 +211,12 @@ class GuestController extends Controller
 
     /**
      * @OA\Get(
-     *    path="/api/guest/{guestId}/rooms",
+     *    path="/api/guest/{id}/rooms",
      *    summary="Get rooms of a specific guest",
      *    tags={"Guest"},
      *    description="Get rooms of a specific guest by ID",
      *    @OA\Parameter(
-     *        name="guestId",
+     *        name="id",
      *        in="path",
      *        required=true,
      *        description="ID of the guest",
@@ -347,12 +347,12 @@ class GuestController extends Controller
 
     /**
  * @OA\Delete(
- *    path="/api/guest/{guestId}/rooms",
+ *    path="/api/guest/{id}/rooms",
  *    summary="Remove rooms from a guest",
  *    tags={"Guest"},
  *    description="Remove rooms from a specific guest by ID and matching dates",
  *    @OA\Parameter(
- *        name="guestId",
+ *        name="id",
  *        in="path",
  *        required=true,
  *        description="ID of the guest",
