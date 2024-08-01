@@ -1,19 +1,14 @@
 <script lang="ts" setup>
 import { useLayout } from './composables/layout';
-import { computed } from 'vue';
 
 const { layoutConfig } = useLayout();
-
-const logoUrl = computed(() => {
-    return `/layout/images/${layoutConfig.darkTheme.value ? 'logo-white' : 'logo-dark'}.svg`;
-});
 </script>
 
 <template>
     <div class="layout-footer">
-        <img :src="logoUrl" alt="Logo" height="20" class="mr-2" />
+        <i class="pi pi-prime mr-2" style="font-size: 2rem;"></i>
         by
-        <span class="font-medium ml-2">Christian</span>
+        <span class="font-medium ml-2">Cloud</span>
     </div>
 </template>
 <style lang="scss" scoped></style>

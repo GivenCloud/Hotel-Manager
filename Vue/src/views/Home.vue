@@ -2,11 +2,8 @@
 import { ref, onMounted } from 'vue';
 import { useToast } from 'primevue/usetoast';
 import { useHotel } from '@/service/useHotel';
-import { type Hotel } from '@/types/hotel';
-import { useRouter } from 'vue-router'; // Importa useRouter para la navegación
 
 const toast = useToast();
-const router = useRouter(); // Usa el hook useRouter
 const dataviewValue = ref(null);
 const layout = ref('grid');
 const sortKey = ref(null);
@@ -30,14 +27,6 @@ onMounted(async () => {
 interface SortOption {
     label: string;
     value: string;
-}
-
-interface HotelItem {
-    id: number;
-    image: string;
-    name: string;
-    address: string;
-    stars: number;
 }
 
 const onSortChange = (event: { value: SortOption }) => {
@@ -154,4 +143,16 @@ const onSortChange = (event: { value: SortOption }) => {
 .hover\:shadow-lg:hover {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
+
+/* Define el color específico para el texto address */
+.text-secondary {
+    color: #1673c5; 
+}
+
+/* Si es necesario, también especifica el color cuando el enlace esté activo */
+.router-link-active .text-secondary,
+.router-link-exact-active .text-secondary {
+    color: #1673c5; /* Color cuando el enlace está activo */
+}
+
 </style>
