@@ -49,13 +49,14 @@ class HotelController extends Controller
      *    @OA\RequestBody(
      *       required=true,
      *       @OA\JsonContent(
-     *           required={"name", "address", "stars", "phone", "email", "website"},
+     *           required={"name", "address", "stars", "phone", "email", "website", "image"},
      *           @OA\Property(property="name", type="string", example="Name"),
      *           @OA\Property(property="address", type="string", example="Address"),
      *           @OA\Property(property="stars", type="integer", example="5"),
      *           @OA\Property(property="phone", type="number", example="987654321"),
      *           @OA\Property(property="email", type="string", format="email", example="hotel@example.com"),
-     *           @OA\Property(property="website", type="string", format="url", example="hotel.com")
+     *           @OA\Property(property="website", type="string", format="url", example="hotel.com"),
+     *           @OA\Property(property="image", type="string", format="url", example="https://example.com/image.jpg")
      *       )
      *    ),
      *    @OA\Response(
@@ -128,13 +129,14 @@ class HotelController extends Controller
  *    @OA\RequestBody(
  *       required=true,
  *       @OA\JsonContent(
- *           required={"name", "address", "stars", "phone", "email", "website"},
+ *           required={"name", "address", "stars", "phone", "email", "website", "image"},
  *           @OA\Property(property="name", type="string", example="Updated Name"),
  *           @OA\Property(property="address", type="string", example="Updated Address"),
  *           @OA\Property(property="stars", type="integer", example="4"),
  *           @OA\Property(property="phone", type="number", example="987654111"),
  *           @OA\Property(property="email", type="string", format="email", example="updated.email@gmail.com"),
- *           @OA\Property(property="website", type="string", format="url", example="updated-hotel.com")
+ *           @OA\Property(property="website", type="string", format="url", example="updated-hotel.com"),
+ *           @OA\Property(property="image", type="string", format="url", example="https://example.com/updated-image.jpg")
  *       )
  *    ),
  *    @OA\Response(

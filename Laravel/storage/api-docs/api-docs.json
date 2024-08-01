@@ -837,6 +837,11 @@
                                         "type": "string",
                                         "format": "url",
                                         "example": "hotel.com"
+                                    },
+                                    "image": {
+                                        "type": "string",
+                                        "format": "url",
+                                        "example": ""
                                     }
                                 },
                                 "type": "object"
@@ -941,6 +946,11 @@
                                         "type": "string",
                                         "format": "url",
                                         "example": "updated-hotel.com"
+                                    },
+                                    "image": {
+                                        "type": "string",
+                                        "format": "url",
+                                        "example": ""
                                     }
                                 },
                                 "type": "object"

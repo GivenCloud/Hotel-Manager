@@ -125,7 +125,7 @@ const deleteProduct = async () => {
         deleteProductDialog.value = false;
         
         // Limpia el producto seleccionado
-        product.value = {};
+        product.value = [];
         
         // Muestra una notificación de éxito
         toast.add({ severity: 'success', summary: 'Successful', detail: 'Category Deleted', life: 3000 });

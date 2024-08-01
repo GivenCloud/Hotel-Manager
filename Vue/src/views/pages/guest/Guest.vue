@@ -160,7 +160,7 @@ const deleteSelectedProducts = async () => {
         
         // Cierra el diálogo de eliminación
         deleteProductsDialog.value = false;
-        selectedProducts.value = null;
+        selectedProducts.value = [];
 
         // Muestra una notificación de éxito
         toast.add({ severity: 'success', summary: 'Successful', detail: 'Guests Deleted', life: 3000 });

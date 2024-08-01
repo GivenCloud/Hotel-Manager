@@ -33,11 +33,6 @@ class StoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            // 'name' => 'required|string|max:40',
-            // 'address' => 'required|string|max:100',
-            // 'phone' => 'required|string|min:9|max:9|unique:hotels,phone,'.$this->route('hotel.id'),
-            // 'email' => 'required|string|email|max:255|unique:hotels,email,'.$this->route('hotel.id'),
-            // 'website' => 'required|string|max:150|unique:hotels,website,'.$this->route('hotel.id'),
             'name' => 'required|string|max:40',
             'address' => 'required|string|max:100',
             'stars' => 'required|integer|between:1,5',
@@ -60,6 +55,7 @@ class StoreRequest extends FormRequest
                 'max:150',
                 Rule::unique('hotels', 'website')->ignore($this->route('hotel'))
             ],
+            'image' => 'required|string|max:400'
         ];
     }
 
@@ -85,6 +81,8 @@ class StoreRequest extends FormRequest
             'website.string' => 'The website field must be a string',
             'website.max' => 'The website field must be at most 150 characters',
             'website.unique' => 'The website field must be unique',
+            'image.required' => 'The image field is required',
+            'image.string' => 'The image field must be a string'
         ];
     }
 }

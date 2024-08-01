@@ -21,6 +21,7 @@ return new class extends Migration
             $table->integer('phone');
             $table->string('email', 256);
             $table->string('website', 150);
+            $table->string('image', 400);
             $table->timestamp('created_at')->nullable(false)->useCurrent();
             $table->timestamp('updated_at')->useCurrentOnUpdate();
         });

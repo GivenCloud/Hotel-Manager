@@ -18,31 +18,20 @@ const sortOptions = ref([
 ]);
 
 const useHotels = new useHotel();
+const products = ref<Hotel[]>([]);
 
 onMounted(async () => {
     try {
         dataviewValue.value = await useHotels.getHotels();
+        console.log(dataviewValue.value);
     } catch (error) {
         toast.add({ severity: 'error', summary: 'Error', detail: 'Failed to load hotels', life: 3000 });
     }
 });
 
-interface SortOption {
-    label: string;
-    value: string;
-}
-
-interface HotelItem {
-    id: number;
-    image: string;
-    name: string;
-    address: string;
-    stars: number;
-}
-
-const onSortChange = (event: { value: SortOption }) => {
-    const value: string = event.value.value;
-    const sortValue: SortOption = event.value;
+const onSortChange = (event) => {
+    const value = event.value.value;
+    const sortValue = event.value;
 
     if (value.indexOf('!') === 0) {
         sortOrder.value = -1;
@@ -55,15 +44,19 @@ const onSortChange = (event: { value: SortOption }) => {
     }
 };
 
+// Función para redirigir a la página de detalles del hotel
+const goToHotelDetail = (id: number) => {
+    router.push({ name: 'hotel-detail', params: { id } });
+};
 </script>
 
 <template>
     <div class="grid">
         <div class="col-12">
             <div class="card">
+                <h5>DataView</h5>
                 <DataView :value="dataviewValue" :layout="layout" :paginator="true" :rows="9" :sortOrder="sortOrder" :sortField="sortField">
                     <template #header>
-                        <h5 class="justify-center text-center text-3xl">Hotels</h5>
                         <div class="grid grid-nogutter">
                             <div class="col-6 text-left">
                                 <Dropdown v-model="sortKey" :options="sortOptions" optionLabel="label" placeholder="Sort By Stars" @change="onSortChange($event)" />
@@ -77,7 +70,7 @@ const onSortChange = (event: { value: SortOption }) => {
                     <template #list="slotProps">
                         <div class="grid grid-nogutter">
                             <div v-for="(item, index) in slotProps.items" :key="index" class="col-12">
-                                <router-link :to="`/items/hotel/${item.id}`">
+                                <router-link :to="{ name: 'hotel-detail', params: { id: item.id } }">
                                     <div class="flex flex-column sm:flex-row sm:align-items-center p-4 gap-3 transition-transform transform hover:scale-105 hover:shadow-lg" :class="{ 'border-top-1 surface-border': index !== 0 }">
                                         <div class="md:w-10rem relative">
                                             <img class="block xl:block mx-auto border-round w-full" :src="`${item.image}`" :alt="item.name" />
@@ -107,8 +100,8 @@ const onSortChange = (event: { value: SortOption }) => {
                     <template #grid="slotProps">
                         <div class="grid grid-nogutter">
                             <div v-for="(item, index) in slotProps.items" :key="index" class="col-12 sm:col-6 md:col-4 p-2">
-                                <router-link :to="`/items/hotel/${item.id}`">
-                                    <div class="p-4 border-1 surface-border surface-card border-round flex flex-column transition-transform transform hover:scale-105 hover:shadow-lg h-full">
+                                <router-link :to="{ name: 'hotel-detail', params: { id: item.id } }">
+                                    <div class="p-4 border-1 surface-border surface-card border-round flex flex-column transition-transform transform hover:scale-105 hover:shadow-lg">
                                         <div class="surface-50 flex justify-content-center border-round p-3">
                                             <div class="relative mx-auto">
                                                 <img class="border-round w-full" :src="`${item.image}`" :alt="item.name" style="max-width: 300px" />

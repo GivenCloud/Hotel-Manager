@@ -44,17 +44,17 @@ const hideDialog = () => {
 
 const saveProduct = async () => {
     submitted.value = true;
-    const { name, address, stars, phone, email, website } = product.value || {};
+    const { name, address, stars, phone, email, website, image } = product.value || {};
 
-    if (!name || !address || !stars || !phone || !email || !website) {
+    if (!name || !address || !stars || !phone || !email || !website || !image) {
         toast.add({ severity: 'error', summary: 'Error', detail: 'All fields are required', life: 3000 });
         return;
     }
 
     try {
         const response = product.value?.id 
-            ? await axios.put(`http://hotel-manager.test/api/hotel/${product.value.id}`, { name, address, stars, phone, email, website })
-            : await axios.post('http://hotel-manager.test/api/hotel', { name, address, stars, phone, email, website });
+            ? await axios.put(`http://hotel-manager.test/api/hotel/${product.value.id}`, { name, address, stars, phone, email, website, image })
+            : await axios.post('http://hotel-manager.test/api/hotel', { name, address, stars, phone, email, website, image });
 
         const newProduct = response.data;
 
@@ -112,8 +112,10 @@ const confirmDeleteSelected = () => {
 
 const deleteSelectedProducts = async () => {
     try {
-        await Promise.all(selectedProducts.value.map(hotel => axios.delete(`http://hotel-manager.test/api/hotel/${hotel.id}`)));
-        products.value = products.value.filter(p => !selectedProducts.value.some(selected => selected.id === p.id));
+        await Promise.all(selectedProducts.value.map((hotel: Hotel) => 
+            axios.delete(`http://hotel-manager.test/api/hotel/${hotel.id}`)
+        ));
+        products.value = products.value.filter((p: any) => !selectedProducts.value.some(selected => selected.id === p.id));
         deleteProductsDialog.value = false;
         selectedProducts.value = [];
         toast.add({ severity: 'success', summary: 'Successful', detail: 'Hotels Deleted', life: 3000 });
@@ -172,6 +174,12 @@ const initFilters = () => {
                             {{ slotProps.data.name }}
                         </template>
                     </Column>
+                    <Column header="Image" headerStyle="width:14%; min-width:10rem;">
+                        <template #body="slotProps">
+                            <span class="p-column-title">Image</span>
+                            <img :src="slotProps.data.image" :alt="slotProps.data.image" class="shadow-2" width="100" />
+                        </template>
+                    </Column>
                     <Column field="address" header="Address" :sortable="true" headerStyle="width:14%; min-width:10rem;">
                         <template #body="slotProps">
                             <span class="p-column-title">Address</span>
@@ -212,7 +220,7 @@ const initFilters = () => {
                 </DataTable>
 
                 <Dialog v-model:visible="productDialog" :style="{ width: '450px' }" header="Product Details" :modal="true" class="p-fluid">
-                    <img :src="'/demo/images/product/' + product.image" :alt="product.image" v-if="product.image" width="150" class="mt-0 mx-auto mb-5 block shadow-2" />
+                    <img :src="product.image" :alt="product.image" v-if="product.image" width="150" class="mt-0 mx-auto mb-5 block shadow-2" />
                     <div class="field">
                         <label for="name">Name</label>
                         <InputText id="name" v-model.trim="product.name" required="true" autofocus :invalid="submitted && !product.name" />
@@ -243,6 +251,11 @@ const initFilters = () => {
                         <InputText id="website" v-model.trim="product.website" required="true" autofocus :invalid="submitted && !product.website" />
                         <small class="p-invalid" v-if="submitted && !product.website">Website is required.</small>
                     </div>
+                    <div class="field">
+                        <label for="image">Image</label>
+                        <InputText id="image" v-model.trim="product.image" required="false" autofocus :invalid="submitted && !product.image"/>
+                        <small class="p-invalid" v-if="submitted && !product.image">Image is required.</small>
+                    </div>
                     <template #footer>
                         <Button label="Cancel" icon="pi pi-times" text="" @click="hideDialog" />
                         <Button label="Save" icon="pi pi-check" text="" @click="saveProduct" />
@@ -267,7 +280,7 @@ const initFilters = () => {
                 <Dialog v-model:visible="deleteProductsDialog" :style="{ width: '450px' }" header="Confirm" :modal="true">
                     <div class="flex align-items-center justify-content-center">
                         <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
-                        <span v-if="product">Are you sure you want to delete the selected products?</span>
+                        <span>Are you sure you want to delete the selected products?</span>
                     </div>
                     <template #footer>
                         <Button label="No" icon="pi pi-times" text @click="deleteProductsDialog = false" />
