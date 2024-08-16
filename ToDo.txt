@@ -1,13 +1,14 @@
-borrar todas las cosas que no necesito de la barra lateral
+solo he añadido las migraciones, queda hacer todo lo demas.
+cosas que se me ocurren:
+-añadir vite/tailwindcss +
+-añadir vue +
+-modelos +
+-request +
+-api.php +
+-controladores api +
+-factories +
+-seeders +
+-swagger/postman +
+-tests
 
-meter un atributo precio en la relacion entre guest y room
 
-//Error: comprobar que las peticiones solo aceptan entero y no string
-
-
-Hay que hacer la vista de register y asegurarse de que funciona.
-Quiero que al hacer click en el muñeco de arriba a la derecha aparezca un desplegable con dos opciones, una que sea perfil y otra que sea para logout
-Puedo hacer que dependiendo el rol del usuario solo se muestren en el menu lateral las opciones disponibles para ese rol
-
-
-Recoger el resto de rutas par que cuando se escriba una ruta incorrecta muestre una vista de 404 Not Found.
