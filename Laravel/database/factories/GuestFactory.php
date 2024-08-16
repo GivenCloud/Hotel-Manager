@@ -18,9 +18,19 @@ class GuestFactory extends Factory
      */
     public function definition(): array
     {
-        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-        Guest::truncate();
-        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        if (DB::getDriverName() !== 'pgsql') {
+            DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        }
+        
+        if (DB::getDriverName() === 'pgsql') {
+            DB::statement('TRUNCATE TABLE guests RESTART IDENTITY CASCADE;');
+        } else {
+            Guest::truncate();
+        }
+        
+        if (DB::getDriverName() !== 'pgsql') {
+            DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        }
         return [
             'name' => $this->faker->firstName(),
             'lastName' => $this->faker->lastName(),

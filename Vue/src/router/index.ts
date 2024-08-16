@@ -1,8 +1,12 @@
+import Vue from 'vue';
 import { createRouter, createWebHistory } from 'vue-router';
 import AppLayout from '../layout/AppLayout.vue';
+import { getCurrentUser } from '@/service/Auth';
+import type { User } from '@/types/user';
+import apiClient from 'axios';
 
 const router = createRouter({
-    history: createWebHistory(),
+    history: createWebHistory(import.meta.env.VITE_BASE_URL),
     routes: [
         {
             path: '/',
@@ -11,89 +15,104 @@ const router = createRouter({
                 {
                     path: '/',
                     name: 'home',
-                    component: () => import('@/views/Home.vue')
+                    component: () => import('@/views/Home.vue'),
+                    meta: { requiresAuth: true},
                 },
                 {
                     path: '/dashboard',
                     name: 'dashboard',
-                    component: () => import('@/views/pages/Dashboard.vue')
+                    component: () => import('@/views/pages/Dashboard.vue'),
+                    meta: { requiresAuth: true, requiresAdmin: true },
                 },
                 {
                     path: '/items/hotel',
                     name: 'hotels',
                     component: () => import('@/views/pages/hotel/Hotel.vue'),
+                    meta: { requiresAuth: true, requiresAdmin: true },
                 },
                 {
                     path: '/items/hotel/:id',
                     name: 'hotelDetails',
                     component: () => import('@/views/pages/hotel/HotelDetails.vue'),
-                    props: true
+                    props: true,
+                    meta: { requiresAuth: true},
                 },
                 {
                     path: '/items/hotel/:id/services',
                     name: 'hotelServices',
                     component: () => import('@/views/pages/hotel/HotelServices.vue'),
-                    props: true
+                    props: true,
+                    meta: { requiresAuth: true, requiresAdmin: true },
                 },
                 {
                     path: '/items/guest',
                     name: 'guests',
-                    component: () => import('@/views/pages/guest/Guest.vue')
+                    component: () => import('@/views/pages/guest/Guest.vue'),
+                    meta: { requiresAuth: true, requiresAdmin: true },
                 },
                 {
                     path: '/items/guest/:id/services',
                     name: 'guestServices',
                     component: () => import('@/views/pages/guest/GuestServices.vue'),
-                    props: true
+                    props: true,
+                    meta: { requiresAuth: true, requiresAdmin: true },
                 },
                 {
                     path: '/items/guest/:id/rooms',
                     name: 'guestRooms',
                     component: () => import('@/views/pages/guest/GuestRooms.vue'),
-                    props: true
+                    props: true,
+                    meta: { requiresAuth: true, requiresAdmin: true },
                 },
                 {
                     path: '/items/room',
                     name: 'rooms',
-                    component: () => import('@/views/pages/room/Room.vue')
+                    component: () => import('@/views/pages/room/Room.vue'),
+                    meta: { requiresAuth: true, requiresAdmin: true },
                 },
                 {
                     path: '/items/room/:id/guests',
                     name: 'roomGuests',
                     component: () => import('@/views/pages/room/RoomGuests.vue'),
-                    props: true
+                    props: true,
+                    meta: { requiresAuth: true, requiresAdmin: true },
                 },
                 {
                     path: '/items/type',
                     name: 'types',
-                    component: () => import('@/views/pages/type/Type.vue')
+                    component: () => import('@/views/pages/type/Type.vue'),
+                    meta: { requiresAuth: true, requiresAdmin: true },
                 },
                 {
                     path: '/items/service',
                     name: 'services',
-                    component: () => import('@/views/pages/service/Service.vue')
+                    component: () => import('@/views/pages/service/Service.vue'),
+                    meta: { requiresAuth: true, requiresAdmin: true },
                 },
                 {
                     path: '/items/service/:id/hotels',
                     name: 'serviceHotels',
                     component: () => import('@/views/pages/service/ServiceHotels.vue'),
-                    props: true
+                    props: true,
+                    meta: { requiresAuth: true, requiresAdmin: true },
                 },
                 {
                     path: '/items/service/:id/guests',
                     name: 'serviceGuests',
                     component: () => import('@/views/pages/service/ServiceGuests.vue'),
-                    props: true
+                    props: true,
+                    meta: { requiresAuth: true, requiresAdmin: true },
                 },
                 {
                     path: '/items/category',
                     name: 'categories',
-                    component: () => import('@/views/pages/category/Category.vue')
+                    component: () => import('@/views/pages/category/Category.vue'),
+                    meta: { requiresAuth: true, requiresAdmin: true },
                 },
                 {
                     path: '/uikit/formlayout',
                     name: 'formlayout',
-                    component: () => import('@/views/uikit/FormLayout.vue')
+                    component: () => import('@/views/uikit/FormLayout.vue'),
                 },
                 {
                     path: '/uikit/input',
@@ -237,6 +256,11 @@ const router = createRouter({
             component: () => import('@/views/pages/auth/Login.vue')
         },
         {
+            path: '/auth/register',
+            name: 'register',
+            component: () => import('@/views/pages/auth/Register.vue')
+        },
+        {
             path: '/auth/access',
             name: 'accessDenied',
             component: () => import('@/views/pages/auth/Access.vue')
@@ -245,8 +269,58 @@ const router = createRouter({
             path: '/auth/error',
             name: 'error',
             component: () => import('@/views/pages/auth/Error.vue')
+        },
+        {
+            path: '/:catchAll(.*)',
+            name: 'notfound',
+            component: () => import('@/views/Home.vue'),
+            meta: { requiresAuth: true},
         }
     ]
+});
+
+// Guardias de ruta globales
+router.beforeEach(async (to, from, next) => {
+    const token = localStorage.getItem('token');
+    console.log('token', token);
+
+    let user: User | null = null;
+    const requiresAuth = to.meta.requiresAuth;
+    const requiresAdmin = to.meta.requiresAdmin;
+
+    if (requiresAuth) {
+        try {
+            // Make a POST request to the API with the token in the Authorization header
+            const response = await apiClient.post('http://hotel-manager.test/api/auth/me', {}, {
+                headers: {
+                    Authorization: `Bearer ${token}` // Include the token in the header
+                }
+            });
+    
+            //console.log('User data:', response.data);
+            user = response.data; // Get the user object from the response
+    
+        } catch (e) {
+            console.error('Error fetching user data:', e);
+            next({ name: 'login' });
+        }
+    }
+
+    console.log('Navegando a:', to.name);
+    console.log('Requiere autenticación:', requiresAuth);
+    console.log('Requiere admin:', requiresAdmin);
+    console.log('Usuario actual:', user);
+
+    if (requiresAuth && !user) {
+        console.log('Usuario no autenticado, redirigiendo al login');
+        next({ name: 'login' });
+    } else if (requiresAdmin && user && user.role !== 'admin') {
+        console.log('Usuario no es admin, redirigiendo a acceso denegado');
+        next({ name: 'accessDenied' });
+    } else {
+        console.log('Permitiendo la navegación');
+        next();
+    }
 });
 
 export default router;

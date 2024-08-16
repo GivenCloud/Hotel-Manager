@@ -5,7 +5,7 @@ import { useService } from '../../../service/useService';
 import { useCategory } from '@/service/useCategory';
 import { useToast } from 'primevue/usetoast';
 import { type Service } from '@/types/service';
-import axios from 'axios';
+import apiClient from 'axios';
 
 const toast = useToast();
 
@@ -71,10 +71,14 @@ const saveProduct = async () => {
             }
 
             // Realiza la petición PUT a la API de Laravel para actualizar el service
-            response = await axios.put(`http://hotel-manager.test/api/service/${product.value.id}`, {
+            response = await apiClient.put(`http://hotel-manager.test/api/service/${product.value.id}`, {
                 name: product.value.name,
                 description: product.value.description,
                 category_id: categoryId,
+            }, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}` // Include the token in the header
+                }
             });
 
             // Actualiza el service en la lista local
@@ -87,10 +91,14 @@ const saveProduct = async () => {
             toast.add({ severity: 'success', summary: 'Successful', detail: 'Service Updated', life: 3000 });
         } else {
             // Realiza la petición POST a la API de Laravel para crear un nuevo service
-            response = await axios.post('http://hotel-manager.test/api/service', {
+            response = await apiClient.post('http://hotel-manager.test/api/service', {
                 name: product.value.name,
                 description: product.value.description,
                 category_id: product.value.category_id.value,
+            }, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}` // Include the token in the header
+                }
             });
 
             // Añade el nuevo service a la lista local
@@ -143,7 +151,11 @@ const confirmDeleteProduct = (editProduct: Service) => {
 const deleteProduct = async () => {
     try {
         // Realiza la petición DELETE a la API de Laravel
-        await axios.delete(`http://hotel-manager.test/api/service/${product.value.id}`);
+        await apiClient.delete(`http://hotel-manager.test/api/service/${product.value.id}`, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}` // Include the token in the header
+            }
+        });
 
         // Filtra el producto eliminado de la lista local
         products.value = products.value.filter((val: { id: any; }) => val.id !== product.value.id);
@@ -171,7 +183,11 @@ const deleteSelectedProducts = async () => {
     try {
         // Realiza todas las peticiones DELETE concurrentemente
         await Promise.all(selectedProducts.value.map((service: Service) => 
-            axios.delete(`http://hotel-manager.test/api/service/${service.id}`)
+            apiClient.delete(`http://hotel-manager.test/api/service/${service.id}`, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}` // Include the token in the header
+                }
+            })
         ));
 
         // Filtra los servicees locales eliminando los seleccionados

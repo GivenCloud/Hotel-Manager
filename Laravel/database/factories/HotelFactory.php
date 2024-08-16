@@ -19,9 +19,19 @@ class HotelFactory extends Factory
      */
     public function definition(): array
     {
-        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-        Hotel::truncate();
-        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        if (DB::getDriverName() !== 'pgsql') {
+            DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        }
+        
+        if (DB::getDriverName() === 'pgsql') {
+            DB::statement('TRUNCATE TABLE hotels RESTART IDENTITY CASCADE;');
+        } else {
+            Hotel::truncate();
+        }
+        
+        if (DB::getDriverName() !== 'pgsql') {
+            DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        }
 
         // Configura tu clave de API de Unsplash
         $unsplashApiKey = 'S16g_JuLbEJD6OBEHaBC5kpZs0MEvmW0PSIBHwg8MKk';

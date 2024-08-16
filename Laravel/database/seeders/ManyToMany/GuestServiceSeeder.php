@@ -13,9 +13,19 @@ class GuestServiceSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-        GuestService::truncate();
-        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        if (DB::getDriverName() !== 'pgsql') {
+            DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        }
+        
+        if (DB::getDriverName() === 'pgsql') {
+            DB::statement('TRUNCATE TABLE guest_services RESTART IDENTITY CASCADE;');
+        } else {
+            GuestService::truncate();
+        }
+        
+        if (DB::getDriverName() !== 'pgsql') {
+            DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        }
 
         $combinations = [];
         for ($guest_id = 1; $guest_id <= 20; $guest_id++) {

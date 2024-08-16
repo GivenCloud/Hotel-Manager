@@ -4,7 +4,7 @@ import { ref, onMounted, onBeforeMount } from 'vue';
 import { useCategory } from '../../../service/useCategory';
 import { useToast } from 'primevue/usetoast';
 import { type Category } from '@/types/category';
-import axios from 'axios';
+import apiClient from '@/axios';
 
 const toast = useToast();
 
@@ -52,8 +52,12 @@ const saveProduct = async () => {
 
         if (product.value.id) {
             // Realiza la petición PUT a la API de Laravel para actualizar el category
-            response = await axios.put(`http://hotel-manager.test/api/category/${product.value.id}`, {
+            response = await apiClient.put(`http://hotel-manager.test/api/category/${product.value.id}`, {
                 name: product.value.name,
+            }, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}` // Include the token in the header
+                }
             });
 
             // Actualiza el category en la lista local
@@ -66,8 +70,12 @@ const saveProduct = async () => {
             toast.add({ severity: 'success', summary: 'Successful', detail: 'Category Updated', life: 3000 });
         } else {
             // Realiza la petición POST a la API de Laravel para crear un nuevo category
-            response = await axios.post('http://hotel-manager.test/api/category', {
+            response = await apiClient.post('http://hotel-manager.test/api/category', {
                 name: product.value.name,
+            }, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}` // Include the token in the header
+                }
             });
 
             // Añade el nuevo category a la lista local
@@ -116,7 +124,11 @@ const confirmDeleteProduct = (editProduct: Category) => {
 const deleteProduct = async () => {
     try {
         // Realiza la petición DELETE a la API de Laravel
-        await axios.delete(`http://hotel-manager.test/api/category/${product.value.id}`);
+        await apiClient.delete(`http://hotel-manager.test/api/category/${product.value.id}`, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}` // Include the token in the header
+            }
+        });
 
         // Filtra el producto eliminado de la lista local
         products.value = products.value.filter((val: { id: any; }) => val.id !== product.value.id);
@@ -144,7 +156,11 @@ const deleteSelectedProducts = async () => {
     try {
         // Realiza todas las peticiones DELETE concurrentemente
         await Promise.all(selectedProducts.value.map((category: Category) => 
-            axios.delete(`http://hotel-manager.test/api/category/${category.id}`)
+            apiClient.delete(`http://hotel-manager.test/api/category/${category.id}`, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}` // Include the token in the header
+                }
+            })
         ));
 
         // Filtra los categories locales eliminando los seleccionados

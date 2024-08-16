@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
-import axios from 'axios';
+import apiClient from 'axios';
 import { type Guest } from '@/types/guest';
 import { useToast } from 'primevue/usetoast';
 import Calendar from 'primevue/calendar';
@@ -33,7 +33,11 @@ const checkOut = ref<string | null>(null);
 // Function to fetch all guests from the API
 const fetchGuests = async () => {
   try {
-    const response = await axios.get('http://hotel-manager.test/api/guest');
+    const response = await apiClient.get('http://hotel-manager.test/api/guest', {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}` // Include the token in the header
+      }
+    });
     allGuests.value = response.data;
     return response.data;
   } catch (error) {
@@ -45,7 +49,7 @@ const fetchGuests = async () => {
 // // Function to fetch guests assigned to a specific room
 // const fetchAssignedGuests = async (roomId: string) => {
 //   try {
-//     const response = await axios.get(`http://hotel-manager.test/api/room/${roomId}/guests`);
+//     const response = await apiClient.get(`http://hotel-manager.test/api/room/${roomId}/guests`);
 //     return response.data;
 //   } catch (error) {
 //     console.error(`Error fetching assigned guests for room ${roomId}:`, error);
@@ -55,7 +59,11 @@ const fetchGuests = async () => {
 
 const fetchAssignedGuests = async (roomId: string) => {
   try {
-    const response = await axios.get(`http://hotel-manager.test/api/room/${roomId}/guests`);
+    const response = await apiClient.get(`http://hotel-manager.test/api/room/${roomId}/guests`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}` // Include the token in the header
+      }
+    });
     return response.data; // Aquí debería incluir checkInDate y checkOutDate
   } catch (error) {
     console.error(`Error fetching assigned guests for room ${roomId}:`, error);
@@ -75,7 +83,7 @@ const fetchAssignedGuests = async (roomId: string) => {
 //   const formattedCheckOut = new Date(checkOut.value).toISOString().split('T')[0];
 
 //   try {
-//     await axios.post(`http://hotel-manager.test/api/room/${roomId}/guests`, {
+//     await apiClient.post(`http://hotel-manager.test/api/room/${roomId}/guests`, {
 //       room_id: roomId, 
 //       guest_id: [guest.id],
 //       checkInDate: formattedCheckIn, 
@@ -125,11 +133,15 @@ const assignGuest = async (guest: Guest | null) => {
   }
 
   try {
-    await axios.post(`http://hotel-manager.test/api/room/${roomId}/guests`, {
+    await apiClient.post(`http://hotel-manager.test/api/room/${roomId}/guests`, {
       room_id: roomId,
       guest_id: [guest.id],
       checkInDate: formattedCheckIn,
       checkOutDate: formattedCheckOut,
+    }, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}` // Include the token in the header
+      }
     });
 
     // Añadir la nueva reserva al estado
@@ -213,7 +225,7 @@ const assignGuest = async (guest: Guest | null) => {
 // // Function to remove an assigned guest
 // const removeGuest = async (guest: Guest) => {
 //   try {
-//     await axios.delete(`http://hotel-manager.test/api/room/${roomId}/guests`, {
+//     await apiClient.delete(`http://hotel-manager.test/api/room/${roomId}/guests`, {
 //       data: {
 //         room_id: roomId,
 //         guest_id: [guest.id],
@@ -246,13 +258,16 @@ const assignedGuests = ref<AssignedGuest[]>([]);
 const removeGuest = async (guestId: number, checkInDate: string, checkOutDate: string) => {
   console.log(guestId, checkInDate, checkOutDate);
   try {
-    await axios.delete(`http://hotel-manager.test/api/room/${roomId}/guests`, {
+    await apiClient.delete(`http://hotel-manager.test/api/room/${roomId}/guests`, {
       data: {
         room_id: roomId,
         guest_id: [guestId],
         checkInDate,
         checkOutDate,
       },
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}` // Include the token in the header
+      }
     });
     assignedGuests.value = assignedGuests.value.filter((r: any) => !(r.id === guestId && r.checkInDate === checkInDate && r.checkOutDate === checkOutDate));
   } catch (error) {

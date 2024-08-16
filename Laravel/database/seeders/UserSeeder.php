@@ -13,18 +13,30 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-        User::truncate();
-        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        if (DB::getDriverName() !== 'pgsql') {
+            DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        }
+        
+        if (DB::getDriverName() === 'pgsql') {
+            DB::statement('TRUNCATE TABLE users RESTART IDENTITY CASCADE;');
+        } else {
+            User::truncate();
+        }
+        
+        if (DB::getDriverName() !== 'pgsql') {
+            DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        }
 
         User::create(
             ['name' => 'Admin',
+            'role' => 'admin',
             'email' => 'admin@gmail.com',
             'password' => bcrypt('123456789'),]
         );
 
         User::create(
             ['name' => 'Usuario',
+            'role' => 'user',
             'email' => 'usuario@gmail.com',
             'password' => bcrypt('123456789'),]
         );

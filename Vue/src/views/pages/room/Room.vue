@@ -6,7 +6,7 @@ import { useHotel } from '@/service/useHotel';
 import { useType } from '@/service/useType';
 import { useToast } from 'primevue/usetoast';
 import { type Room } from '@/types/room';
-import axios from 'axios';
+import apiClient from 'axios';
 
 const toast = useToast();
 
@@ -87,10 +87,14 @@ const saveProduct = async () => {
             }
 
             // Realiza la petición PUT a la API de Laravel para actualizar el room
-            response = await axios.put(`http://hotel-manager.test/api/room/${product.value.id}`, {
+            response = await apiClient.put(`http://hotel-manager.test/api/room/${product.value.id}`, {
                 number: product.value.number,
                 type_id: typeId,
                 hotel_id: hotelId,
+            }, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}` // Include the token in the header
+                }
             });
 
             // Actualiza el room en la lista local
@@ -103,10 +107,14 @@ const saveProduct = async () => {
             toast.add({ severity: 'success', summary: 'Successful', detail: 'Room Updated', life: 3000 });
         } else {
             // Realiza la petición POST a la API de Laravel para crear un nuevo room
-            response = await axios.post('http://hotel-manager.test/api/room', {
+            response = await apiClient.post('http://hotel-manager.test/api/room', {
                 number: product.value.number,
                 type_id: product.value.type_id.value,
                 hotel_id: product.value.hotel_id.value,
+            }, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}` // Include the token in the header
+                }
             });
 
             // Añade el nuevo room a la lista local
@@ -159,7 +167,11 @@ const confirmDeleteProduct = (editProduct: Room) => {
 const deleteProduct = async () => {
     try {
         // Realiza la petición DELETE a la API de Laravel
-        await axios.delete(`http://hotel-manager.test/api/room/${product.value.id}`);
+        await apiClient.delete(`http://hotel-manager.test/api/room/${product.value.id}`, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}` // Include the token in the header
+            }
+        });
 
         // Filtra el producto eliminado de la lista local
         products.value = products.value.filter((val: { id: any; }) => val.id !== product.value.id);
@@ -187,7 +199,11 @@ const deleteSelectedProducts = async () => {
     try {
         // Realiza todas las peticiones DELETE concurrentemente
         await Promise.all(selectedProducts.value.map((room: Room) => 
-            axios.delete(`http://hotel-manager.test/api/room/${room.id}`)
+            apiClient.delete(`http://hotel-manager.test/api/room/${room.id}`, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}` // Include the token in the header
+                }
+            })
         ));
 
         // Filtra los roomes locales eliminando los seleccionados

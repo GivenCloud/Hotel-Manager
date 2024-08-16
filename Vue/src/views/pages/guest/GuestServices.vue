@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
-import axios from 'axios';
+import apiClient from 'axios';
 import { type Service } from '@/types/service';
 import { useToast } from 'primevue/usetoast';
 
@@ -23,7 +23,11 @@ const assignedServices = ref<Service[]>([]);
 // Function to fetch all services from the API
 const fetchServices = async () => {
   try {
-    const response = await axios.get('http://hotel-manager.test/api/service');
+    const response = await apiClient.get('http://hotel-manager.test/api/service', {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}` // Include the token in the header
+      }
+    });
     allServices.value = response.data;
     return response.data;
   } catch (error) {
@@ -35,7 +39,11 @@ const fetchServices = async () => {
 // Function to fetch services assigned to a specific guest
 const fetchAssignedServices = async (guestId: string) => {
   try {
-    const response = await axios.get(`http://hotel-manager.test/api/guest/${guestId}/services`);
+    const response = await apiClient.get(`http://hotel-manager.test/api/guest/${guestId}/services`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}` // Include the token in the header
+      }
+    });
     return response.data;
   } catch (error) {
     console.error(`Error fetching assigned services for guest ${guestId}:`, error);
@@ -55,9 +63,13 @@ const assignService = async (service: Service | null) => {
   }
 
   try {
-    await axios.post(`http://hotel-manager.test/api/guest/${guestId}/services`, {
+    await apiClient.post(`http://hotel-manager.test/api/guest/${guestId}/services`, {
       guest_id: guestId,
       service_id: [service.id],
+    }, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}` // Include the token in the header
+      }
     });
     assignedServices.value.push(service);
     selectedService.value = null;
@@ -72,11 +84,14 @@ const assignService = async (service: Service | null) => {
 // Function to remove an assigned service
 const removeService = async (service: Service) => {
   try {
-    await axios.delete(`http://hotel-manager.test/api/guest/${guestId}/services`, {
+    await apiClient.delete(`http://hotel-manager.test/api/guest/${guestId}/services`, {
       data: {
         guest_id: guestId,
         service_id: [service.id],
       },
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}` // Include the token in the header
+      }
     });
     assignedServices.value = assignedServices.value.filter((g: Service) => g.id !== service.id);
   } catch (error) {

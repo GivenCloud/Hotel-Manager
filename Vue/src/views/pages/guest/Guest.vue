@@ -4,7 +4,7 @@ import { ref, onMounted, onBeforeMount } from 'vue';
 import { useGuest } from '../../../service/useGuest';
 import { useToast } from 'primevue/usetoast';
 import { type Guest } from '@/types/guest';
-import axios from 'axios';
+import apiClient from '@/axios';
 
 const toast = useToast();
 
@@ -52,12 +52,16 @@ const saveProduct = async () => {
 
         if (product.value.id) {
             // Realiza la petición PUT a la API de Laravel para actualizar el guest
-            response = await axios.put(`http://hotel-manager.test/api/guest/${product.value.id}`, {
+            response = await apiClient.put(`http://hotel-manager.test/api/guest/${product.value.id}`, {
                 name: product.value.name,
                 lastName: product.value.lastName,
                 dniPassport: product.value.dniPassport,
                 email: product.value.email,
                 phone: product.value.phone,
+            }, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}` // Include the token in the header
+                }
             });
 
             // Actualiza el guest en la lista local
@@ -70,12 +74,16 @@ const saveProduct = async () => {
             toast.add({ severity: 'success', summary: 'Successful', detail: 'Guest Updated', life: 3000 });
         } else {
             // Realiza la petición POST a la API de Laravel para crear un nuevo guest
-            response = await axios.post('http://hotel-manager.test/api/guest', {
+            response = await apiClient.post('http://hotel-manager.test/api/guest', {
                 name: product.value.name,
                 lastName: product.value.lastName,
                 dniPassport: product.value.dniPassport,
                 email: product.value.email,
                 phone: product.value.phone,
+            }, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}` // Include the token in the header
+                }
             });
 
             // Añade el nuevo guest a la lista local
@@ -124,7 +132,11 @@ const confirmDeleteProduct = (editProduct: Guest) => {
 const deleteProduct = async () => {
     try {
         // Realiza la petición DELETE a la API de Laravel
-        await axios.delete(`http://hotel-manager.test/api/guest/${product.value.id}`);
+        await apiClient.delete(`http://hotel-manager.test/api/guest/${product.value.id}`, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}` // Include the token in the header
+            }
+        });
 
         // Filtra el producto eliminado de la lista local
         products.value = products.value.filter((val: { id: any; }) => val.id !== product.value.id);
@@ -152,7 +164,11 @@ const deleteSelectedProducts = async () => {
     try {
         // Realiza todas las peticiones DELETE concurrentemente
         await Promise.all(selectedProducts.value.map((guest: Guest) => 
-            axios.delete(`http://hotel-manager.test/api/guest/${guest.id}`)
+            apiClient.delete(`http://hotel-manager.test/api/guest/${guest.id}`, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}` // Include the token in the header
+                }
+            })
         ));
 
         // Filtra los guestes locales eliminando los seleccionados

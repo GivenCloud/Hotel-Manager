@@ -4,7 +4,7 @@ import { ref, onMounted, onBeforeMount } from 'vue';
 import { useType } from '../../../service/useType';
 import { useToast } from 'primevue/usetoast';
 import { type Type } from '@/types/type';
-import axios from 'axios';
+import apiClient from 'axios';
 
 const toast = useToast();
 
@@ -60,10 +60,14 @@ const saveProduct = async () => {
         let response;
 
         if (product.value.id) {
-            response = await axios.put(`http://hotel-manager.test/api/type/${product.value.id}`, {
+            response = await apiClient.put(`http://hotel-manager.test/api/type/${product.value.id}`, {
                 name: product.value.name,
                 price: Number(product.value.price),
                 capacity: Number(product.value.capacity),
+            }, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}` // Include the token in the header
+                }
             });
 
             const index = products.value.findIndex(p => p.id === product.value.id);
@@ -73,10 +77,14 @@ const saveProduct = async () => {
 
             toast.add({ severity: 'success', summary: 'Successful', detail: 'Type Updated', life: 3000 });
         } else {
-            response = await axios.post('http://hotel-manager.test/api/type', {
+            response = await apiClient.post('http://hotel-manager.test/api/type', {
                 name: product.value.name,
                 price: Number(product.value.price),
                 capacity: Number(product.value.capacity),
+            }, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}` // Include the token in the header
+                }
             });
 
             products.value.push(response.data);
@@ -120,7 +128,11 @@ const confirmDeleteProduct = (editProduct: Type) => {
 
 const deleteProduct = async () => {
     try {
-        await axios.delete(`http://hotel-manager.test/api/type/${product.value.id}`);
+        await apiClient.delete(`http://hotel-manager.test/api/type/${product.value.id}`, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}` // Include the token in the header
+            }
+        });
         products.value = products.value.filter(p => p.id !== product.value.id);
         deleteProductDialog.value = false;
         product.value = { id: null, name: '', price: 0, capacity: 0 };
@@ -137,7 +149,11 @@ const confirmDeleteSelected = () => {
 const deleteSelectedProducts = async () => {
     try {
         await Promise.all(selectedProducts.value.map(type =>
-            axios.delete(`http://hotel-manager.test/api/type/${type.id}`)
+            apiClient.delete(`http://hotel-manager.test/api/type/${type.id}`, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}` // Include the token in the header
+                }
+            })
         ));
 
         products.value = products.value.filter(p => !selectedProducts.value.includes(p));

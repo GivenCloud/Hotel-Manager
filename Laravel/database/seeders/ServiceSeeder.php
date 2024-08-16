@@ -13,9 +13,19 @@ class ServiceSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-        Service::truncate();
-        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        if (DB::getDriverName() !== 'pgsql') {
+            DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        }
+        
+        if (DB::getDriverName() === 'pgsql') {
+            DB::statement('TRUNCATE TABLE services RESTART IDENTITY CASCADE;');
+        } else {
+            Service::truncate();
+        }
+        
+        if (DB::getDriverName() !== 'pgsql') {
+            DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        }
 
         Service::create(
             ['name' => 'Wi-Fi',

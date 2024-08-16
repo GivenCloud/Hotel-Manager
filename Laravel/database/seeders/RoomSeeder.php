@@ -15,8 +15,19 @@ class RoomSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-        Room::truncate();
+        if (DB::getDriverName() !== 'pgsql') {
+            DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        }
+        
+        if (DB::getDriverName() === 'pgsql') {
+            DB::statement('TRUNCATE TABLE rooms RESTART IDENTITY CASCADE;');
+        } else {
+            Room::truncate();
+        }
+        
+        if (DB::getDriverName() !== 'pgsql') {
+            DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        }
         
 
         for ($i = 1; $i <= 20; $i++) {
@@ -28,6 +39,5 @@ class RoomSeeder extends Seeder
                 'hotel_id' => $hotel->id]
             );
         }
-        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }
 }
