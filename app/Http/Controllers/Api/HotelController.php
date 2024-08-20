@@ -8,13 +8,8 @@ use App\Http\Requests\ManyToMany\HotelService\StoreServiceRequest;
 use App\Models\Hotel;
 
 /**
- * @OA\Info(
- *   title="Hotel management API",
- *  version="1.0.0",
- * )
- * 
  * @OA\Tag(
- *    name="Hotel",
+ *   name="Hotel",
  *   description="API Endpoints of Hotel Controller"
  * )
  */

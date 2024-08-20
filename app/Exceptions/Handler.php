@@ -2,6 +2,7 @@
 
 namespace App\Exceptions;
 
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -44,6 +45,8 @@ class Handler extends ExceptionHandler
             return response()->json(['error' => 'Resource not found'], 404);
         } else if ($exception instanceof NotFoundHttpException) {
             return response()->json(['error' => 'Resource not found'], 404);
+        } else if ($exception instanceof AuthenticationException) {
+            return response()->json(['error' => 'Unauthenticated'], 401);
         } else if ($exception instanceof ValidationException) {
             return response()->json(['errors' => $exception->errors()], 422);
         } else if ($exception instanceof HttpResponseException) {
