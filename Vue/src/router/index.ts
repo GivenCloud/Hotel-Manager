@@ -288,7 +288,6 @@ const router = createRouter({
 // Guardias de ruta globales
 router.beforeEach(async (to, from, next) => {
     const token = localStorage.getItem('token');
-    console.log('token', token);
 
     let user: User | null = null;
     const requiresAuth = to.meta.requiresAuth;
@@ -312,19 +311,16 @@ router.beforeEach(async (to, from, next) => {
         }
     }
 
-    console.log('Navegando a:', to.name);
-    console.log('Requiere autenticación:', requiresAuth);
-    console.log('Requiere admin:', requiresAdmin);
-    console.log('Usuario actual:', user);
+    // console.log('Navegando a:', to.name);
+    // console.log('Requiere autenticación:', requiresAuth);
+    // console.log('Requiere admin:', requiresAdmin);
+    // console.log('Usuario actual:', user);
 
     if (requiresAuth && !user) {
-        console.log('Usuario no autenticado, redirigiendo al login');
         next({ name: 'login' });
     } else if (requiresAdmin && user && user.role !== 'admin') {
-        console.log('Usuario no es admin, redirigiendo a acceso denegado');
         next({ name: 'accessDenied' });
     } else {
-        console.log('Permitiendo la navegación');
         next();
     }
 });

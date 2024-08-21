@@ -11,7 +11,6 @@ const apiClient: AxiosInstance = axios.create({
 apiClient.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
-    console.log("Token:", token); // Verificar si el token está presente
     if (token) {
       if (config.headers) {
         config.headers.Authorization = `Bearer ${token}`;
